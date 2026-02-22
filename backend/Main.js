@@ -113,6 +113,44 @@ app.post('/Register/Organization', (req, res) => {
   });
 });
 
+app.get('/getSponsorDetails/:id',(req,res)=>{
+  db.get("SELECT * FROM USER,SPONSOR WHERE USER.ID = SPONSOR.ID and USER.id=?", [req.params.id], (err, rows) => {
+    if (err) {
+      return res.status(500).json({message: err});
+    } else {
+      res.status(200).json(rows);
+    }
+  });
+});
 
+app.get('/getOrganizationDetails/:id',(req,res)=>{
+  db.get("SELECT * FROM USER,ORGANIZATION WHERE USER.ID = ORGANIZATION.ID and USER.id=?", [req.params.id], (err, rows) => {
+    if (err) {
+      return res.status(500).json({message: err});
+    } else {
+      res.status(200).json(rows);
+    }
+  });
+});
+
+app.get('/delSponsor/:id',(req,res)=>{
+  db.run("DELETE FROM USER,SPONSOR WHERE USER.ID = SPONSOR.ID and USER.ID = ?", [req.params.id], (err) => {
+    if (err) {
+      return res.status(500).json({message: err});
+    } else {
+      res.status(200).json({message: 'Sponsor deleted successfully'});
+    }
+  });
+});
+
+app.get('/delOrganization/:id',(req,res)=>{
+  db.run("DELETE FROM USER,ORGANIZATION WHERE USER.ID = ORGANIZATION.ID and USER.ID = ?", [req.params.id], (err) => {
+    if (err) {
+      return res.status(500).json({message: err});
+    } else {
+      res.status(200).json({message: 'Organization deleted successfully'});
+    }
+  });
+});
 
 app.listen(port);
