@@ -95,14 +95,9 @@ export default function Home() {
                             </p>
                             
                             <div className="flex flex-col sm:flex-row gap-4">
-                                <Link to={createPageUrl('Register')}>
-                                    <Button size="lg" className="w-full sm:w-auto bg-[#22C55E] hover:bg-[#22C55E]/90 text-white px-8 h-14 text-lg">
-                                        Get Started Free
-                                        <ArrowRight className="ml-2 w-5 h-5" />
-                                    </Button>
-                                </Link>
+                                
                                 <Link to={createPageUrl('BrowseEvents')}>
-                                    <Button size="lg" variant="outline" className="w-full sm:w-auto border-white text-white hover:bg-white hover:text-[#1E3A8A] px-8 h-14 text-lg">
+                                    <Button size="lg" variant="outline" className="w-full sm:w-auto border-white text-blue-500 hover:bg-white hover:text-[#1E3A8A] px-8 h-14 text-lg">
                                         Browse Events
                                     </Button>
                                 </Link>
@@ -223,7 +218,7 @@ export default function Home() {
                             </Button>
                         </Link>
                         <Link to={createPageUrl('About')}>
-                            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-[#1E3A8A] px-8 h-14 text-lg">
+                            <Button size="lg" variant="outline" className="border-white text-blue-500 hover:bg-white hover:text-[#1E3A8A] px-8 h-14 text-lg">
                                 Learn More
                             </Button>
                         </Link>

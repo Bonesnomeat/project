@@ -1,10 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
 import { Button } from "C:/Users/USER/sponza/project/my-app/src/components/ui/button";
-
-import { Menu, X, Sparkles } from 'lucide-react';
-
+import { Menu, X } from 'lucide-react';
 import { createPageUrl } from "C:/Users/USER/sponza/project/my-app/src/utils";
 
 export default function Navbar({ isAuthenticated, onLogout, userRole }) {
@@ -21,13 +18,17 @@ export default function Navbar({ isAuthenticated, onLogout, userRole }) {
         <nav className="bg-white border-b border-slate-100 sticky top-0 z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
-                    <Link to={createPageUrl('Home')} className="flex items-center gap-2">
-                        <div className="w-9 h-9 bg-gradient-to-br from-[#1E3A8A] to-[#22C55E] rounded-xl flex items-center justify-center">
-                            <Sparkles className="w-5 h-5 text-white" />
-                        </div>
-                        <span className="text-xl font-bold text-[#1E3A8A]">Sponza</span>
+
+                    {/* Logo */}
+                    <Link to={createPageUrl('Home')} className="flex items-center">
+                        <img
+                            src="/img/sponza_logo_dark_blue.png"
+                            alt="Sponza logo"
+                            style={{ height: '130px', width: '200px', objectFit: 'contain', alignItems: 'left' }}
+                        />
                     </Link>
 
+                    {/* Desktop Nav Links */}
                     <div className="hidden md:flex items-center gap-8">
                         <Link to={createPageUrl('Home')} className="text-[#1F2937] hover:text-[#1E3A8A] transition-colors font-medium">
                             Home
@@ -35,11 +36,10 @@ export default function Navbar({ isAuthenticated, onLogout, userRole }) {
                         <Link to={createPageUrl('About')} className="text-[#1F2937] hover:text-[#1E3A8A] transition-colors font-medium">
                             About
                         </Link>
-                        <Link to={createPageUrl('BrowseEvents')} className="text-[#1F2937] hover:text-[#1E3A8A] transition-colors font-medium">
-                            Browse Events
-                        </Link>
+                        
                     </div>
 
+                    {/* Desktop Auth Buttons */}
                     <div className="hidden md:flex items-center gap-3">
                         {isAuthenticated ? (
                             <>
@@ -48,9 +48,9 @@ export default function Navbar({ isAuthenticated, onLogout, userRole }) {
                                         Dashboard
                                     </Button>
                                 </Link>
-                                <Button 
+                                <Button
                                     onClick={onLogout}
-                                    variant="outline" 
+                                    variant="outline"
                                     className="border-[#1E3A8A] text-[#1E3A8A] hover:bg-[#1E3A8A] hover:text-white"
                                 >
                                     Logout
@@ -72,7 +72,8 @@ export default function Navbar({ isAuthenticated, onLogout, userRole }) {
                         )}
                     </div>
 
-                    <button 
+                    {/* Mobile Menu Toggle */}
+                    <button
                         className="md:hidden p-2"
                         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                     >
@@ -80,6 +81,7 @@ export default function Navbar({ isAuthenticated, onLogout, userRole }) {
                     </button>
                 </div>
 
+                {/* Mobile Menu */}
                 {mobileMenuOpen && (
                     <div className="md:hidden py-4 border-t border-slate-100">
                         <div className="flex flex-col gap-3">
@@ -98,7 +100,7 @@ export default function Navbar({ isAuthenticated, onLogout, userRole }) {
                                     <Link to={getDashboardUrl()} className="px-3 py-2 text-[#1E3A8A] font-medium hover:bg-slate-50 rounded-lg">
                                         Dashboard
                                     </Link>
-                                    <button 
+                                    <button
                                         onClick={onLogout}
                                         className="px-3 py-2 text-left text-red-600 hover:bg-red-50 rounded-lg"
                                     >
@@ -122,3 +124,5 @@ export default function Navbar({ isAuthenticated, onLogout, userRole }) {
         </nav>
     );
 }
+
+
