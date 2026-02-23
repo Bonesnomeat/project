@@ -4,17 +4,20 @@ import {
     LayoutDashboard, Search, Calendar, History, 
     Settings, ArrowLeft, CheckCircle, Users, MapPin
 } from 'lucide-react';
-import { createPageUrl } from '@/utils';
+
+import { createPageUrl } from 'C:/Users/USER/sponza/project/my-app/src/utils';
 import Sidebar from '../components/shared/Sidebar';
 import DashboardHeader from '../components/shared/DashboardHeader';
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { dummyEvents } from '@/components/data/dummyData';
+
+import { Card } from "C:/Users/USER/sponza/project/my-app/src/components/ui/card";
+import { Button } from "C:/Users/USER/sponza/project/my-app/src/components/ui/button";
+import { Input } from "C:/Users/USER/sponza/project/my-app/src/components/ui/input";
+import { Label } from "C:/Users/USER/sponza/project/my-app/src/components/ui/label";
+import { Textarea } from "C:/Users/USER/sponza/project/my-app/src/components/ui/textarea";
+import { Badge } from "C:/Users/USER/sponza/project/my-app/src/components/ui/badge";
+import { RadioGroup, RadioGroupItem } from "C:/Users/USER/sponza/project/my-app/src/components/ui/radio-group";
+
+import { dummyEvents } from 'C:/Users/USER/sponza/project/my-app/src/components/data/dummyData';
 
 export default function SponsorApply() {
     const navigate = useNavigate();
@@ -141,7 +144,6 @@ export default function SponsorApply() {
                         </div>
 
                         <div className="grid lg:grid-cols-3 gap-8">
-                            {/* Event Summary */}
                             <Card className="lg:col-span-1 p-6 h-fit">
                                 <img 
                                     src={event.image} 
@@ -167,7 +169,6 @@ export default function SponsorApply() {
                                 </div>
                             </Card>
 
-                            {/* Application Form */}
                             <Card className="lg:col-span-2 p-6">
                                 <form onSubmit={handleSubmit}>
                                     <h3 className="text-xl font-semibold text-[#1F2937] mb-6">Select Sponsorship Package</h3>
@@ -210,18 +211,12 @@ export default function SponsorApply() {
                                     <div className="space-y-6">
                                         <div>
                                             <Label>Company Name</Label>
-                                            <Input 
-                                                defaultValue={user.companyName || 'Acme Corporation'}
-                                                className="mt-1"
-                                            />
+                                            <Input defaultValue={user.companyName || 'Acme Corporation'} className="mt-1" />
                                         </div>
 
                                         <div>
                                             <Label>Contact Email</Label>
-                                            <Input 
-                                                defaultValue={user.email}
-                                                className="mt-1"
-                                            />
+                                            <Input defaultValue={user.email} className="mt-1" />
                                         </div>
 
                                         <div>

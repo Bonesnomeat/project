@@ -4,14 +4,14 @@ import {
     LayoutDashboard, Calendar, PlusCircle, FileText, 
     CreditCard, Settings, Users, TrendingUp, Clock, CheckCircle
 } from 'lucide-react';
-import { createPageUrl } from '@/utils';
+import { createPageUrl } from 'C:/Users/USER/sponza/project/my-app/src/utils';
 import Sidebar from '../components/shared/Sidebar';
 import DashboardHeader from '../components/shared/DashboardHeader';
 import StatsCard from '../components/shared/StatsCard';
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { dummyUsers, dummyEvents, dummySponsorshipRequests } from '@/components/data/dummyData';
+import { Card } from "C:/Users/USER/sponza/project/my-app/src/components/ui/card";
+import { Button } from "C:/Users/USER/sponza/project/my-app/src/components/ui/button";
+import { Badge } from "C:/Users/USER/sponza/project/my-app/src/components/ui/badge";
+import { dummyUsers, dummyEvents, dummySponsorshipRequests } from 'C:/Users/USER/sponza/project/my-app/src/components/data/dummyData';
 
 export default function CollegeDashboard() {
     const navigate = useNavigate();

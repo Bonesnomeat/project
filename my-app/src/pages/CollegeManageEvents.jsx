@@ -5,13 +5,13 @@ import {
     CreditCard, Settings, Search, Filter, MoreVertical,
     Edit, Trash2, Eye, Users
 } from 'lucide-react';
-import { createPageUrl } from '@/utils';
+import { createPageUrl } from 'C:/Users/USER/sponza/project/my-app/src/utils';
 import Sidebar from '../components/shared/Sidebar';
 import DashboardHeader from '../components/shared/DashboardHeader';
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { Card } from "C:/Users/USER/sponza/project/my-app/src/components/ui/card";
+import { Button } from "C:/Users/USER/sponza/project/my-app/src/components/ui/button";
+import { Input } from "C:/Users/USER/sponza/project/my-app/src/components/ui/input";
+import { Badge } from "C:/Users/USER/sponza/project/my-app/src/components/ui/badge";
 import {
     Table,
     TableBody,
@@ -19,14 +19,14 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table";
+} from "C:/Users/USER/sponza/project/my-app/src/components/ui/table";
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { dummyEvents } from '@/components/data/dummyData';
+} from "C:/Users/USER/sponza/project/my-app/src/components/ui/dropdown-menu";
+import { dummyEvents } from 'C:/Users/USER/sponza/project/my-app/src/components/data/dummyData';
 
 export default function CollegeManageEvents() {
     const navigate = useNavigate();

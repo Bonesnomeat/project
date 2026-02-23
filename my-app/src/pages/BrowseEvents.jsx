@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
-import { Badge } from "@/components/ui/badge";
+import { Input } from "C:/Users/USER/sponza/project/my-app/src/components/ui/input";
+import { Button } from "C:/Users/USER/sponza/project/my-app/src/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "C:/Users/USER/sponza/project/my-app/src/components/ui/select";
+import { Slider } from "C:/Users/USER/sponza/project/my-app/src/components/ui/slider";
+import { Badge } from "C:/Users/USER/sponza/project/my-app/src/components/ui/badge";
 import { Search, SlidersHorizontal, X, MapPin, Calendar } from 'lucide-react';
-import { createPageUrl } from '@/utils';
+import { createPageUrl } from 'C:/Users/USER/sponza/project/my-app/src/utils';
 import Navbar from '../components/shared/Navbar';
 import Footer from '../components/shared/Footer';
 import EventCard from '../components/shared/EventCard';
-import { dummyEvents } from '@/components/data/dummyData';
+import { dummyEvents } from 'C:/Users/USER/sponza/project/my-app/src/components/data/dummyData';
 
 export default function BrowseEvents() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -74,7 +74,6 @@ export default function BrowseEvents() {
                         Discover sponsorship opportunities that align with your brand
                     </p>
 
-                    {/* Search Bar */}
                     <div className="flex flex-col md:flex-row gap-4">
                         <div className="relative flex-1">
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
@@ -100,7 +99,6 @@ export default function BrowseEvents() {
                 </div>
             </section>
 
-            {/* Filters Panel */}
             {showFilters && (
                 <div className="bg-white border-b shadow-sm">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -160,7 +158,6 @@ export default function BrowseEvents() {
                 </div>
             )}
 
-            {/* Events Grid */}
             <section className="py-12">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center mb-8">

@@ -1,23 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { 
     LayoutDashboard, Search, Calendar, History, 
-    Settings, TrendingUp, DollarSign, Target, Award
+    Settings, Filter, SlidersHorizontal
 } from 'lucide-react';
-import { createPageUrl } from '@/utils';
+import { createPageUrl } from 'C:/Users/USER/sponza/project/my-app/src/utils';
 import Sidebar from '../components/shared/Sidebar';
 import DashboardHeader from '../components/shared/DashboardHeader';
-import StatsCard from '../components/shared/StatsCard';
 import EventCard from '../components/shared/EventCard';
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { dummyEvents, dummySponsorshipHistory } from '@/components/data/dummyData';
+import { Card } from "C:/Users/USER/sponza/project/my-app/src/components/ui/card";
+import { Button } from "C:/Users/USER/sponza/project/my-app/src/components/ui/button";
+import { Input } from "C:/Users/USER/sponza/project/my-app/src/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "C:/Users/USER/sponza/project/my-app/src/components/ui/select";
+import { Badge } from "C:/Users/USER/sponza/project/my-app/src/components/ui/badge";
+import { dummyEvents } from 'C:/Users/USER/sponza/project/my-app/src/components/data/dummyData';
 
-export default function SponsorDashboard() {
+export default function SponsorBrowseEvents() {
     const navigate = useNavigate();
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     const [user, setUser] = useState(null);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [category, setCategory] = useState('all');
+    const [showFilters, setShowFilters] = useState(false);
 
     useEffect(() => {
         const auth = localStorage.getItem('sponza_auth');
@@ -46,14 +50,17 @@ export default function SponsorDashboard() {
         { label: 'Profile Settings', icon: Settings, page: 'SponsorSettings' },
     ];
 
-    const stats = [
-        { title: 'Active Sponsorships', value: '3', change: '+1', trend: 'up', icon: Target, iconBg: 'bg-blue-100' },
-        { title: 'Total Invested', value: '$85K', change: '+20%', trend: 'up', icon: DollarSign, iconBg: 'bg-green-100' },
-        { title: 'Events Reached', value: '12K', icon: TrendingUp, iconBg: 'bg-orange-100' },
-        { title: 'Brand Exposure', value: '500K', icon: Award, iconBg: 'bg-purple-100' },
-    ];
+    const categories = ['All', 'Tech', 'Cultural', 'Sports', 'Workshop', 'Conference'];
 
-    const recommendedEvents = dummyEvents.slice(0, 3);
+    const filteredEvents = dummyEvents.filter(event => {
+        const matchesSearch = event.title.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesCategory = category === 'all' || event.category === category;
+        return matchesSearch && matchesCategory;
+    });
+
+    const handleApply = (event) => {
+        navigate(createPageUrl('SponsorApply') + `?eventId=${event.id}`);
+    };
 
     if (!user) return null;
 
@@ -76,63 +83,76 @@ export default function SponsorDashboard() {
 
                 <main className="flex-1 p-6 lg:p-8 overflow-auto">
                     <div className="max-w-7xl mx-auto">
-                        {/* Stats */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                            {stats.map((stat, i) => (
-                                <StatsCard key={i} {...stat} />
+                        <div className="mb-8">
+                            <h1 className="text-3xl font-bold text-[#1F2937]">Browse Events</h1>
+                            <p className="text-slate-600 mt-1">Discover sponsorship opportunities</p>
+                        </div>
+
+                        <Card className="p-4 mb-6">
+                            <div className="flex flex-col md:flex-row gap-4">
+                                <div className="relative flex-1">
+                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                                    <Input
+                                        placeholder="Search events..."
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        className="pl-10"
+                                    />
+                                </div>
+                                <Select value={category} onValueChange={setCategory}>
+                                    <SelectTrigger className="w-40">
+                                        <SelectValue placeholder="Category" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {categories.map(cat => (
+                                            <SelectItem key={cat} value={cat.toLowerCase()}>{cat}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <Button variant="outline" onClick={() => setShowFilters(!showFilters)}>
+                                    <SlidersHorizontal className="w-4 h-4 mr-2" />
+                                    More Filters
+                                </Button>
+                            </div>
+
+                            {showFilters && (
+                                <div className="mt-4 pt-4 border-t flex flex-wrap gap-2">
+                                    {categories.slice(1).map(cat => (
+                                        <Badge 
+                                            key={cat}
+                                            variant={category === cat.toLowerCase() ? 'default' : 'outline'}
+                                            className="cursor-pointer"
+                                            onClick={() => setCategory(category === cat.toLowerCase() ? 'all' : cat.toLowerCase())}
+                                        >
+                                            {cat}
+                                        </Badge>
+                                    ))}
+                                </div>
+                            )}
+                        </Card>
+
+                        <p className="text-slate-600 mb-6">
+                            Showing <span className="font-semibold text-[#1F2937]">{filteredEvents.length}</span> events
+                        </p>
+
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {filteredEvents.map((event) => (
+                                <EventCard 
+                                    key={event.id} 
+                                    event={event}
+                                    showApplyButton
+                                    onApply={handleApply}
+                                />
                             ))}
                         </div>
 
-                        <div className="grid lg:grid-cols-3 gap-8">
-                            {/* Recommended Events */}
-                            <div className="lg:col-span-2">
-                                <div className="flex items-center justify-between mb-6">
-                                    <h2 className="text-xl font-bold text-[#1F2937]">Recommended Events</h2>
-                                    <Link to={createPageUrl('SponsorBrowseEvents')}>
-                                        <Button variant="ghost" className="text-[#1E3A8A]">View All</Button>
-                                    </Link>
-                                </div>
-
-                                <div className="grid md:grid-cols-2 gap-6">
-                                    {recommendedEvents.slice(0, 2).map((event) => (
-                                        <EventCard key={event.id} event={event} />
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Recent Activity */}
-                            <div>
-                                <Card className="p-6">
-                                    <h2 className="text-xl font-bold text-[#1F2937] mb-6">Recent Activity</h2>
-                                    <div className="space-y-4">
-                                        {dummySponsorshipHistory.map((item) => (
-                                            <div key={item.id} className="p-4 bg-slate-50 rounded-xl">
-                                                <div className="flex items-center justify-between mb-2">
-                                                    <h3 className="font-semibold text-[#1F2937] text-sm">{item.eventTitle}</h3>
-                                                    <Badge className={
-                                                        item.status === 'completed' ? 'bg-green-100 text-green-700' :
-                                                        item.status === 'active' ? 'bg-blue-100 text-blue-700' :
-                                                        'bg-yellow-100 text-yellow-700'
-                                                    }>
-                                                        {item.status}
-                                                    </Badge>
-                                                </div>
-                                                <p className="text-sm text-slate-500">{item.college}</p>
-                                                <div className="flex items-center justify-between mt-2">
-                                                    <span className="text-sm text-slate-400">{item.date}</span>
-                                                    <span className="font-semibold text-[#22C55E]">${item.amount.toLocaleString()}</span>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <Link to={createPageUrl('SponsorHistory')}>
-                                        <Button variant="outline" className="w-full mt-4">
-                                            View All History
-                                        </Button>
-                                    </Link>
-                                </Card>
-                            </div>
-                        </div>
+                        {filteredEvents.length === 0 && (
+                            <Card className="p-12 text-center">
+                                <Search className="w-12 h-12 mx-auto text-slate-300 mb-4" />
+                                <h3 className="text-lg font-semibold text-[#1F2937]">No events found</h3>
+                                <p className="text-slate-500">Try adjusting your filters</p>
+                            </Card>
+                        )}
                     </div>
                 </main>
             </div>

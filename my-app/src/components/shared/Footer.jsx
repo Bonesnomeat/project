@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Sparkles, Mail, Phone, MapPin, Twitter, Linkedin, Instagram } from 'lucide-react';
-import { createPageUrl } from '@/utils';
+
+import { createPageUrl } from "C:/Users/USER/sponza/project/my-app/src/utils";
 
 export default function Footer() {
     return (
@@ -100,7 +101,10 @@ export default function Footer() {
                             </li>
                             <li className="flex items-start gap-3">
                                 <MapPin className="w-5 h-5 text-[#22C55E] mt-0.5" />
-                                <span className="text-blue-200">123 Innovation Drive<br />San Francisco, CA 94105</span>
+                                <span className="text-blue-200">
+                                    123 Innovation Drive<br />
+                                    San Francisco, CA 94105
+                                </span>
                             </li>
                         </ul>
                     </div>

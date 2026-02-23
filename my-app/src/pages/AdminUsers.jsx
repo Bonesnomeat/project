@@ -5,14 +5,18 @@ import {
     BarChart3, Search, Filter, MoreVertical,
     GraduationCap, Building2, Shield, Ban, CheckCircle
 } from 'lucide-react';
-import { createPageUrl } from '@/utils';
+
+import { createPageUrl } from 'C:/Users/USER/sponza/project/my-app/src/utils';
+
 import Sidebar from '../components/shared/Sidebar';
 import DashboardHeader from '../components/shared/DashboardHeader';
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+import { Card } from "C:/Users/USER/sponza/project/my-app/src/components/ui/card";
+import { Button } from "C:/Users/USER/sponza/project/my-app/src/components/ui/button";
+import { Input } from "C:/Users/USER/sponza/project/my-app/src/components/ui/input";
+import { Badge } from "C:/Users/USER/sponza/project/my-app/src/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "C:/Users/USER/sponza/project/my-app/src/components/ui/select";
+
 import {
     Table,
     TableBody,
@@ -20,14 +24,16 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table";
+} from "C:/Users/USER/sponza/project/my-app/src/components/ui/table";
+
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { allUsers } from '@/components/data/dummyData';
+} from "C:/Users/USER/sponza/project/my-app/src/components/ui/dropdown-menu";
+
+import { allUsers } from 'C:/Users/USER/sponza/project/my-app/src/components/data/dummyData';
 
 export default function AdminUsers() {
     const navigate = useNavigate();
@@ -66,7 +72,7 @@ export default function AdminUsers() {
 
     const filteredUsers = allUsers.filter(u => {
         const matchesSearch = u.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            u.email.toLowerCase().includes(searchQuery.toLowerCase());
+                              u.email.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesRole = roleFilter === 'all' || u.role === roleFilter;
         const matchesStatus = statusFilter === 'all' || u.status === statusFilter;
         return matchesSearch && matchesRole && matchesStatus;
@@ -115,6 +121,7 @@ export default function AdminUsers() {
                                         className="pl-10"
                                     />
                                 </div>
+
                                 <Select value={roleFilter} onValueChange={setRoleFilter}>
                                     <SelectTrigger className="w-40">
                                         <SelectValue placeholder="Role" />
@@ -125,6 +132,7 @@ export default function AdminUsers() {
                                         <SelectItem value="sponsor">Sponsor</SelectItem>
                                     </SelectContent>
                                 </Select>
+
                                 <Select value={statusFilter} onValueChange={setStatusFilter}>
                                     <SelectTrigger className="w-40">
                                         <SelectValue placeholder="Status" />
@@ -151,6 +159,7 @@ export default function AdminUsers() {
                                             <TableHead className="w-12"></TableHead>
                                         </TableRow>
                                     </TableHeader>
+
                                     <TableBody>
                                         {filteredUsers.map((u) => (
                                             <TableRow key={u.id}>
@@ -167,12 +176,15 @@ export default function AdminUsers() {
                                                         </div>
                                                     </div>
                                                 </TableCell>
+
                                                 <TableCell>
                                                     <Badge variant="outline" className="capitalize">
                                                         {u.role}
                                                     </Badge>
                                                 </TableCell>
+
                                                 <TableCell className="text-slate-600">{u.joinDate}</TableCell>
+
                                                 <TableCell>
                                                     <Badge className={
                                                         u.status === 'active' ? 'bg-green-100 text-green-700' :
@@ -182,6 +194,7 @@ export default function AdminUsers() {
                                                         {u.status}
                                                     </Badge>
                                                 </TableCell>
+
                                                 <TableCell>
                                                     <DropdownMenu>
                                                         <DropdownMenuTrigger asChild>

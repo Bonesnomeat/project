@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { createPageUrl } from '@/utils';
+import { cn } from "C:/Users/USER/sponza/project/my-app/src/lib/utils";
+import { createPageUrl } from "C:/Users/USER/sponza/project/my-app/src/utils";
 
 export default function Sidebar({ items, collapsed, setCollapsed, userRole }) {
     const location = useLocation();

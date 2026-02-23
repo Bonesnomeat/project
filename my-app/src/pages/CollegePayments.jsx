@@ -4,13 +4,13 @@ import {
     LayoutDashboard, Calendar, PlusCircle, FileText, 
     CreditCard, Settings, Search, Download, Filter
 } from 'lucide-react';
-import { createPageUrl } from '@/utils';
+import { createPageUrl } from 'C:/Users/USER/sponza/project/my-app/src/utils';
 import Sidebar from '../components/shared/Sidebar';
 import DashboardHeader from '../components/shared/DashboardHeader';
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { Card } from "C:/Users/USER/sponza/project/my-app/src/components/ui/card";
+import { Button } from "C:/Users/USER/sponza/project/my-app/src/components/ui/button";
+import { Input } from "C:/Users/USER/sponza/project/my-app/src/components/ui/input";
+import { Badge } from "C:/Users/USER/sponza/project/my-app/src/components/ui/badge";
 import {
     Table,
     TableBody,
@@ -18,8 +18,8 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table";
-import { dummyPaymentRecords } from '@/components/data/dummyData';
+} from "C:/Users/USER/sponza/project/my-app/src/components/ui/table";
+import { dummyPaymentRecords } from 'C:/Users/USER/sponza/project/my-app/src/components/data/dummyData';
 
 export default function CollegePayments() {
     const navigate = useNavigate();
@@ -54,8 +54,13 @@ export default function CollegePayments() {
         { label: 'Profile Settings', icon: Settings, page: 'CollegeSettings' },
     ];
 
-    const totalReceived = dummyPaymentRecords.filter(p => p.status === 'paid').reduce((sum, p) => sum + p.amount, 0);
-    const totalPending = dummyPaymentRecords.filter(p => p.status === 'pending').reduce((sum, p) => sum + p.amount, 0);
+    const totalReceived = dummyPaymentRecords
+        .filter(p => p.status === 'paid')
+        .reduce((sum, p) => sum + p.amount, 0);
+
+    const totalPending = dummyPaymentRecords
+        .filter(p => p.status === 'pending')
+        .reduce((sum, p) => sum + p.amount, 0);
 
     if (!user) return null;
 
@@ -89,19 +94,24 @@ export default function CollegePayments() {
                             </Button>
                         </div>
 
-                        {/* Summary Cards */}
                         <div className="grid md:grid-cols-3 gap-6 mb-8">
                             <Card className="p-6">
                                 <p className="text-sm text-slate-500">Total Received</p>
-                                <p className="text-3xl font-bold text-[#22C55E] mt-2">${totalReceived.toLocaleString()}</p>
+                                <p className="text-3xl font-bold text-[#22C55E] mt-2">
+                                    ${totalReceived.toLocaleString()}
+                                </p>
                             </Card>
                             <Card className="p-6">
                                 <p className="text-sm text-slate-500">Pending Payments</p>
-                                <p className="text-3xl font-bold text-[#F97316] mt-2">${totalPending.toLocaleString()}</p>
+                                <p className="text-3xl font-bold text-[#F97316] mt-2">
+                                    ${totalPending.toLocaleString()}
+                                </p>
                             </Card>
                             <Card className="p-6">
                                 <p className="text-sm text-slate-500">Total Transactions</p>
-                                <p className="text-3xl font-bold text-[#1E3A8A] mt-2">{dummyPaymentRecords.length}</p>
+                                <p className="text-3xl font-bold text-[#1E3A8A] mt-2">
+                                    {dummyPaymentRecords.length}
+                                </p>
                             </Card>
                         </div>
 
@@ -109,10 +119,7 @@ export default function CollegePayments() {
                             <div className="p-4 border-b flex flex-col md:flex-row gap-4">
                                 <div className="relative flex-1">
                                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                                    <Input
-                                        placeholder="Search payments..."
-                                        className="pl-10"
-                                    />
+                                    <Input placeholder="Search payments..." className="pl-10" />
                                 </div>
                                 <Button variant="outline">
                                     <Filter className="w-4 h-4 mr-2" />
@@ -144,8 +151,8 @@ export default function CollegePayments() {
                                                 <TableCell>{payment.date}</TableCell>
                                                 <TableCell>
                                                     <Badge className={
-                                                        payment.status === 'paid' 
-                                                            ? 'bg-green-100 text-green-700' 
+                                                        payment.status === 'paid'
+                                                            ? 'bg-green-100 text-green-700'
                                                             : 'bg-yellow-100 text-yellow-700'
                                                     }>
                                                         {payment.status}

@@ -1,15 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Button } from "C:/Users/USER/sponza/project/my-app/src/components/ui/button";
+import { Card } from "C:/Users/USER/sponza/project/my-app/src/components/ui/card";
 import { 
     Sparkles, ArrowRight, Target, Users, TrendingUp, Shield, 
     CheckCircle, Building2, GraduationCap, Zap
 } from 'lucide-react';
-import { createPageUrl } from '@/utils';
+import { createPageUrl } from 'C:/Users/USER/sponza/project/my-app/src/utils';
 import Navbar from '../components/shared/Navbar';
 import Footer from '../components/shared/Footer';
-import { dummyEvents } from '@/components/data/dummyData';
+import { dummyEvents } from 'C:/Users/USER/sponza/project/my-app/src/components/data/dummyData';
 import EventCard from '../components/shared/EventCard';
 
 export default function Home() {
@@ -71,7 +71,6 @@ export default function Home() {
         <div className="min-h-screen bg-[#F8FAFC]">
             <Navbar isAuthenticated={isAuthenticated} onLogout={handleLogout} userRole={userRole} />
             
-            {/* Hero Section */}
             <section className="relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-[#1E3A8A] via-[#1E3A8A] to-[#22C55E]/30" />
                 <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=1920&h=1080&fit=crop')] opacity-10 bg-cover bg-center" />
@@ -110,7 +109,6 @@ export default function Home() {
                             </div>
                         </div>
 
-                        {/* Stats Cards */}
                         <div className="grid grid-cols-2 gap-4 lg:gap-6">
                             {stats.map((stat, index) => (
                                 <Card key={index} className="p-6 bg-white/95 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-shadow">
@@ -123,7 +121,6 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* How It Works */}
             <section className="py-24 bg-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-16">
@@ -161,7 +158,6 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Features Section */}
             <section className="py-24 bg-[#F8FAFC]">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-16">
@@ -187,7 +183,6 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Featured Events */}
             <section className="py-24 bg-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4">
@@ -213,7 +208,6 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* CTA Section */}
             <section className="py-24 bg-gradient-to-br from-[#1E3A8A] to-[#1E3A8A]/80">
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                     <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">

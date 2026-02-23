@@ -1,10 +1,10 @@
 import React from 'react';
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Card } from "C:/Users/USER/sponza/project/my-app/src/components/ui/card";
+import { Badge } from "C:/Users/USER/sponza/project/my-app/src/components/ui/badge";
+import { Button } from "C:/Users/USER/sponza/project/my-app/src/components/ui/button";
 import { Calendar, MapPin, Users, DollarSign } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
+import { createPageUrl } from "C:/Users/USER/sponza/project/my-app/src/utils";
 
 export default function EventCard({ event, showApplyButton, onApply }) {
     const categoryColors = {

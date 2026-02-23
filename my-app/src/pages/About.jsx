@@ -1,14 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+
+import { Button } from "C:/Users/USER/sponza/project/my-app/src/components/ui/button";
+import { Card } from "C:/Users/USER/sponza/project/my-app/src/components/ui/card";
+
 import { 
-    Target, Heart, Globe, Award, Users, Lightbulb,
-    CheckCircle, ArrowRight, Quote
+  Target, Heart, Globe, Award, Users, Lightbulb,
+  CheckCircle, ArrowRight, Quote
 } from 'lucide-react';
-import { createPageUrl } from '@/utils';
-import Navbar from '../components/shared/Navbar';
-import Footer from '../components/shared/Footer';
+
+import { createPageUrl } from "C:/Users/USER/sponza/project/my-app/src/utils";
+
+import Navbar from "C:/Users/USER/sponza/project/my-app/src/components/shared/Navbar";
+import Footer from "C:/Users/USER/sponza/project/my-app/src/components/shared/Footer";
+
 
 export default function About() {
     const [isAuthenticated, setIsAuthenticated] = React.useState(false);

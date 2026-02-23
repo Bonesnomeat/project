@@ -4,16 +4,16 @@ import {
     LayoutDashboard, Search, Calendar, History, 
     Settings, Filter, SlidersHorizontal
 } from 'lucide-react';
-import { createPageUrl } from '@/utils';
+import { createPageUrl } from 'C:/Users/USER/sponza/project/my-app/src/utils';
 import Sidebar from '../components/shared/Sidebar';
 import DashboardHeader from '../components/shared/DashboardHeader';
 import EventCard from '../components/shared/EventCard';
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { dummyEvents } from '@/components/data/dummyData';
+import { Card } from "C:/Users/USER/sponza/project/my-app/src/components/ui/card";
+import { Button } from "C:/Users/USER/sponza/project/my-app/src/components/ui/button";
+import { Input } from "C:/Users/USER/sponza/project/my-app/src/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "C:/Users/USER/sponza/project/my-app/src/components/ui/select";
+import { Badge } from "C:/Users/USER/sponza/project/my-app/src/components/ui/badge";
+import { dummyEvents } from 'C:/Users/USER/sponza/project/my-app/src/components/data/dummyData';
 
 export default function SponsorBrowseEvents() {
     const navigate = useNavigate();
@@ -88,7 +88,6 @@ export default function SponsorBrowseEvents() {
                             <p className="text-slate-600 mt-1">Discover sponsorship opportunities</p>
                         </div>
 
-                        {/* Search & Filters */}
                         <Card className="p-4 mb-6">
                             <div className="flex flex-col md:flex-row gap-4">
                                 <div className="relative flex-1">
@@ -132,7 +131,6 @@ export default function SponsorBrowseEvents() {
                             )}
                         </Card>
 
-                        {/* Results */}
                         <p className="text-slate-600 mb-6">
                             Showing <span className="font-semibold text-[#1F2937]">{filteredEvents.length}</span> events
                         </p>

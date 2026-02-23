@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "C:/Users/USER/sponza/project/my-app/src/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "C:/Users/USER/sponza/project/my-app/src/components/ui/avatar";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -8,10 +8,10 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "C:/Users/USER/sponza/project/my-app/src/components/ui/dropdown-menu";
 import { Menu, Bell, Settings, LogOut, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
+import { createPageUrl } from "C:/Users/USER/sponza/project/my-app/src/utils";
 
 export default function DashboardHeader({ user, onLogout, onMenuClick, settingsPage }) {
     return (

@@ -4,18 +4,21 @@ import {
     LayoutDashboard, Search, Calendar, History, 
     Settings, User, Building2, Bell, Lock, Camera, Globe
 } from 'lucide-react';
-import { createPageUrl } from '@/utils';
+
+import { createPageUrl } from 'C:/Users/USER/sponza/project/my-app/src/utils';
+
 import Sidebar from '../components/shared/Sidebar';
 import DashboardHeader from '../components/shared/DashboardHeader';
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+import { Card } from "C:/Users/USER/sponza/project/my-app/src/components/ui/card";
+import { Button } from "C:/Users/USER/sponza/project/my-app/src/components/ui/button";
+import { Input } from "C:/Users/USER/sponza/project/my-app/src/components/ui/input";
+import { Label } from "C:/Users/USER/sponza/project/my-app/src/components/ui/label";
+import { Textarea } from "C:/Users/USER/sponza/project/my-app/src/components/ui/textarea";
+import { Switch } from "C:/Users/USER/sponza/project/my-app/src/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "C:/Users/USER/sponza/project/my-app/src/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "C:/Users/USER/sponza/project/my-app/src/components/ui/tabs";
+import { Avatar, AvatarFallback, AvatarImage } from "C:/Users/USER/sponza/project/my-app/src/components/ui/avatar";
 
 export default function SponsorSettings() {
     const navigate = useNavigate();

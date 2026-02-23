@@ -1,8 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from "@/components/ui/button";
+
+import { Button } from "C:/Users/USER/sponza/project/my-app/src/components/ui/button";
+
 import { Menu, X, Sparkles } from 'lucide-react';
-import { createPageUrl } from '@/utils';
+
+import { createPageUrl } from "C:/Users/USER/sponza/project/my-app/src/utils";
 
 export default function Navbar({ isAuthenticated, onLogout, userRole }) {
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
@@ -25,7 +28,6 @@ export default function Navbar({ isAuthenticated, onLogout, userRole }) {
                         <span className="text-xl font-bold text-[#1E3A8A]">Sponza</span>
                     </Link>
 
-                    {/* Desktop Navigation */}
                     <div className="hidden md:flex items-center gap-8">
                         <Link to={createPageUrl('Home')} className="text-[#1F2937] hover:text-[#1E3A8A] transition-colors font-medium">
                             Home
@@ -70,7 +72,6 @@ export default function Navbar({ isAuthenticated, onLogout, userRole }) {
                         )}
                     </div>
 
-                    {/* Mobile menu button */}
                     <button 
                         className="md:hidden p-2"
                         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -79,7 +80,6 @@ export default function Navbar({ isAuthenticated, onLogout, userRole }) {
                     </button>
                 </div>
 
-                {/* Mobile Navigation */}
                 {mobileMenuOpen && (
                     <div className="md:hidden py-4 border-t border-slate-100">
                         <div className="flex flex-col gap-3">

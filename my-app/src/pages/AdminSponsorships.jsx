@@ -7,10 +7,10 @@ import {
 import { createPageUrl } from 'C:/Users/USER/sponza/project/my-app/src/utils';
 import Sidebar from '../components/shared/Sidebar';
 import DashboardHeader from '../components/shared/DashboardHeader';
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { Card } from "C:/Users/USER/sponza/project/my-app/src/components/ui/card";
+import { Button } from "C:/Users/USER/sponza/project/my-app/src/components/ui/button";
+import { Input } from "C:/Users/USER/sponza/project/my-app/src/components/ui/input";
+import { Badge } from "C:/Users/USER/sponza/project/my-app/src/components/ui/badge";
 import {
     Table,
     TableBody,
@@ -18,8 +18,8 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table";
-import { dummySponsorshipRequests, dummyPaymentRecords } from '@/components/data/dummyData';
+} from "C:/Users/USER/sponza/project/my-app/src/components/ui/table";
+import { dummySponsorshipRequests, dummyPaymentRecords } from 'C:/Users/USER/sponza/project/my-app/src/components/data/dummyData';
 
 export default function AdminSponsorships() {
     const navigate = useNavigate();

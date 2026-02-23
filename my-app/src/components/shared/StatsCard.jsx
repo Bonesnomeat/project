@@ -1,6 +1,6 @@
 import React from 'react';
-import { Card } from "@/components/ui/card";
-import { cn } from '@/lib/utils';
+import { Card } from "C:/Users/USER/sponza/project/my-app/src/components/ui/card";
+import { cn } from "C:/Users/USER/sponza/project/my-app/src/lib/utils";
 
 export default function StatsCard({ title, value, change, icon: Icon, iconBg, trend }) {
     return (

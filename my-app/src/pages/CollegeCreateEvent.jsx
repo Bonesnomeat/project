@@ -4,15 +4,17 @@ import {
     LayoutDashboard, Calendar, PlusCircle, FileText, 
     CreditCard, Settings, Upload, X, Plus, Trash2
 } from 'lucide-react';
-import { createPageUrl } from '@/utils';
+
+import { createPageUrl } from "C:/Users/USER/sponza/project/my-app/src/utils";
 import Sidebar from '../components/shared/Sidebar';
 import DashboardHeader from '../components/shared/DashboardHeader';
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+import { Card } from "C:/Users/USER/sponza/project/my-app/src/components/ui/card";
+import { Button } from "C:/Users/USER/sponza/project/my-app/src/components/ui/button";
+import { Input } from "C:/Users/USER/sponza/project/my-app/src/components/ui/input";
+import { Label } from "C:/Users/USER/sponza/project/my-app/src/components/ui/label";
+import { Textarea } from "C:/Users/USER/sponza/project/my-app/src/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "C:/Users/USER/sponza/project/my-app/src/components/ui/select";
 
 export default function CollegeCreateEvent() {
     const navigate = useNavigate();
@@ -145,17 +147,24 @@ export default function CollegeCreateEvent() {
 
                 <main className="flex-1 p-6 lg:p-8 overflow-auto">
                     <div className="max-w-4xl mx-auto">
+
                         <div className="mb-8">
                             <h1 className="text-3xl font-bold text-[#1F2937]">Create New Event</h1>
-                            <p className="text-slate-600 mt-2">Fill in the details to create a new sponsorship opportunity</p>
+                            <p className="text-slate-600 mt-2">
+                                Fill in the details to create a new sponsorship opportunity
+                            </p>
                         </div>
 
                         <form onSubmit={handleSubmit}>
-                            {/* Basic Details */}
+
+                            {/* Event Details */}
                             <Card className="p-6 mb-6">
-                                <h2 className="text-xl font-semibold text-[#1F2937] mb-6">Event Details</h2>
-                                
+                                <h2 className="text-xl font-semibold text-[#1F2937] mb-6">
+                                    Event Details
+                                </h2>
+
                                 <div className="grid gap-6">
+
                                     <div>
                                         <Label>Event Title</Label>
                                         <Input
@@ -181,7 +190,10 @@ export default function CollegeCreateEvent() {
                                     <div className="grid md:grid-cols-2 gap-6">
                                         <div>
                                             <Label>Category</Label>
-                                            <Select value={formData.category} onValueChange={(v) => handleInputChange('category', v)}>
+                                            <Select
+                                                value={formData.category}
+                                                onValueChange={(v) => handleInputChange('category', v)}
+                                            >
                                                 <SelectTrigger className="mt-1">
                                                     <SelectValue placeholder="Select category" />
                                                 </SelectTrigger>
@@ -192,6 +204,7 @@ export default function CollegeCreateEvent() {
                                                 </SelectContent>
                                             </Select>
                                         </div>
+
                                         <div>
                                             <Label>Expected Attendees</Label>
                                             <Input
@@ -215,6 +228,7 @@ export default function CollegeCreateEvent() {
                                                 required
                                             />
                                         </div>
+
                                         <div>
                                             <Label>End Date</Label>
                                             <Input
@@ -246,14 +260,18 @@ export default function CollegeCreateEvent() {
                                             className="mt-1"
                                         />
                                     </div>
+
                                 </div>
                             </Card>
 
                             {/* Poster Upload */}
                             <Card className="p-6 mb-6">
-                                <h2 className="text-xl font-semibold text-[#1F2937] mb-6">Event Poster</h2>
-                                
+                                <h2 className="text-xl font-semibold text-[#1F2937] mb-6">
+                                    Event Poster
+                                </h2>
+
                                 <div className="border-2 border-dashed border-slate-300 rounded-xl p-8 text-center hover:border-[#1E3A8A] transition-colors">
+
                                     {posterPreview ? (
                                         <div className="relative inline-block">
                                             <img 
@@ -272,8 +290,12 @@ export default function CollegeCreateEvent() {
                                     ) : (
                                         <label className="cursor-pointer">
                                             <Upload className="w-12 h-12 mx-auto text-slate-400 mb-4" />
-                                            <p className="text-lg font-medium text-[#1F2937]">Upload Event Poster</p>
-                                            <p className="text-sm text-slate-500 mt-1">PNG, JPG up to 5MB</p>
+                                            <p className="text-lg font-medium text-[#1F2937]">
+                                                Upload Event Poster
+                                            </p>
+                                            <p className="text-sm text-slate-500 mt-1">
+                                                PNG, JPG up to 5MB
+                                            </p>
                                             <input
                                                 type="file"
                                                 accept="image/*"
@@ -282,98 +304,20 @@ export default function CollegeCreateEvent() {
                                             />
                                         </label>
                                     )}
-                                </div>
-                            </Card>
 
-                            {/* Sponsorship Packages */}
-                            <Card className="p-6 mb-6">
-                                <div className="flex items-center justify-between mb-6">
-                                    <h2 className="text-xl font-semibold text-[#1F2937]">Sponsorship Packages</h2>
-                                    <Button type="button" variant="outline" onClick={addPackage}>
-                                        <Plus className="w-4 h-4 mr-2" />
-                                        Add Package
-                                    </Button>
-                                </div>
-
-                                <div className="space-y-6">
-                                    {packages.map((pkg, pkgIndex) => (
-                                        <div key={pkgIndex} className="p-6 bg-slate-50 rounded-xl relative">
-                                            {packages.length > 1 && (
-                                                <button
-                                                    type="button"
-                                                    onClick={() => removePackage(pkgIndex)}
-                                                    className="absolute top-4 right-4 text-red-500 hover:text-red-700"
-                                                >
-                                                    <Trash2 className="w-5 h-5" />
-                                                </button>
-                                            )}
-
-                                            <div className="grid md:grid-cols-2 gap-4 mb-4">
-                                                <div>
-                                                    <Label>Package Name</Label>
-                                                    <Input
-                                                        placeholder="e.g., Platinum"
-                                                        value={pkg.name}
-                                                        onChange={(e) => handlePackageChange(pkgIndex, 'name', e.target.value)}
-                                                        className="mt-1"
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <Label>Price ($)</Label>
-                                                    <Input
-                                                        type="number"
-                                                        placeholder="e.g., 50000"
-                                                        value={pkg.price}
-                                                        onChange={(e) => handlePackageChange(pkgIndex, 'price', e.target.value)}
-                                                        className="mt-1"
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            <div>
-                                                <Label>Benefits</Label>
-                                                <div className="space-y-2 mt-2">
-                                                    {pkg.benefits.map((benefit, benIndex) => (
-                                                        <div key={benIndex} className="flex gap-2">
-                                                            <Input
-                                                                placeholder="e.g., Main stage banner"
-                                                                value={benefit}
-                                                                onChange={(e) => handleBenefitChange(pkgIndex, benIndex, e.target.value)}
-                                                            />
-                                                            {pkg.benefits.length > 1 && (
-                                                                <Button
-                                                                    type="button"
-                                                                    variant="ghost"
-                                                                    size="icon"
-                                                                    onClick={() => removeBenefit(pkgIndex, benIndex)}
-                                                                >
-                                                                    <X className="w-4 h-4" />
-                                                                </Button>
-                                                            )}
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                                <Button
-                                                    type="button"
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    onClick={() => addBenefit(pkgIndex)}
-                                                    className="mt-2 text-[#1E3A8A]"
-                                                >
-                                                    <Plus className="w-4 h-4 mr-1" />
-                                                    Add Benefit
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    ))}
                                 </div>
                             </Card>
 
                             {/* Submit */}
                             <div className="flex gap-4 justify-end">
-                                <Button type="button" variant="outline" onClick={() => navigate(createPageUrl('CollegeDashboard'))}>
+                                <Button 
+                                    type="button" 
+                                    variant="outline" 
+                                    onClick={() => navigate(createPageUrl('CollegeDashboard'))}
+                                >
                                     Cancel
                                 </Button>
+
                                 <Button 
                                     type="submit" 
                                     className="bg-[#22C55E] hover:bg-[#22C55E]/90 px-8"
@@ -382,6 +326,7 @@ export default function CollegeCreateEvent() {
                                     {loading ? 'Creating...' : 'Create Event'}
                                 </Button>
                             </div>
+
                         </form>
                     </div>
                 </main>

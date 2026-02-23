@@ -5,14 +5,18 @@ import {
     BarChart3, Settings, TrendingUp, DollarSign, 
     Building2, GraduationCap, AlertCircle
 } from 'lucide-react';
-import { createPageUrl } from '@/utils';
+
+import { createPageUrl } from 'C:/Users/USER/sponza/project/my-app/src/utils';
 import Sidebar from '../components/shared/Sidebar';
 import DashboardHeader from '../components/shared/DashboardHeader';
 import StatsCard from '../components/shared/StatsCard';
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { dummyAdminStats, allUsers, dummyEvents } from '@/components/data/dummyData';
+
+import { Card } from "C:/Users/USER/sponza/project/my-app/src/components/ui/card";
+import { Button } from "C:/Users/USER/sponza/project/my-app/src/components/ui/button";
+import { Badge } from "C:/Users/USER/sponza/project/my-app/src/components/ui/badge";
+
+import { dummyAdminStats, allUsers, dummyEvents } 
+from 'C:/Users/USER/sponza/project/my-app/src/components/data/dummyData';
 
 export default function AdminPanel() {
     const navigate = useNavigate();
@@ -82,18 +86,17 @@ export default function AdminPanel() {
                             <p className="text-slate-600 mt-1">Platform overview and management</p>
                         </div>
 
-                        {/* Stats */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                             {stats.map((stat, i) => (
                                 <StatsCard key={i} {...stat} />
                             ))}
                         </div>
 
-                        {/* User & Event Distribution */}
                         <div className="grid lg:grid-cols-2 gap-8 mb-8">
                             <Card className="p-6">
                                 <h2 className="text-xl font-bold text-[#1F2937] mb-6">User Distribution</h2>
                                 <div className="space-y-4">
+
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-3">
                                             <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -104,10 +107,16 @@ export default function AdminPanel() {
                                                 <p className="text-sm text-slate-500">{dummyAdminStats.totalColleges} registered</p>
                                             </div>
                                         </div>
-                                        <span className="text-2xl font-bold text-[#1E3A8A]">{Math.round(dummyAdminStats.totalColleges / dummyAdminStats.totalUsers * 100)}%</span>
+                                        <span className="text-2xl font-bold text-[#1E3A8A]">
+                                            {Math.round(dummyAdminStats.totalColleges / dummyAdminStats.totalUsers * 100)}%
+                                        </span>
                                     </div>
+
                                     <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-                                        <div className="h-full bg-blue-500 rounded-full" style={{ width: `${dummyAdminStats.totalColleges / dummyAdminStats.totalUsers * 100}%` }} />
+                                        <div 
+                                            className="h-full bg-blue-500 rounded-full"
+                                            style={{ width: `${dummyAdminStats.totalColleges / dummyAdminStats.totalUsers * 100}%` }}
+                                        />
                                     </div>
 
                                     <div className="flex items-center justify-between mt-6">
@@ -120,11 +129,18 @@ export default function AdminPanel() {
                                                 <p className="text-sm text-slate-500">{dummyAdminStats.totalSponsors} registered</p>
                                             </div>
                                         </div>
-                                        <span className="text-2xl font-bold text-[#22C55E]">{Math.round(dummyAdminStats.totalSponsors / dummyAdminStats.totalUsers * 100)}%</span>
+                                        <span className="text-2xl font-bold text-[#22C55E]">
+                                            {Math.round(dummyAdminStats.totalSponsors / dummyAdminStats.totalUsers * 100)}%
+                                        </span>
                                     </div>
+
                                     <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-                                        <div className="h-full bg-green-500 rounded-full" style={{ width: `${dummyAdminStats.totalSponsors / dummyAdminStats.totalUsers * 100}%` }} />
+                                        <div 
+                                            className="h-full bg-green-500 rounded-full"
+                                            style={{ width: `${dummyAdminStats.totalSponsors / dummyAdminStats.totalUsers * 100}%` }}
+                                        />
                                     </div>
+
                                 </div>
                             </Card>
 
@@ -152,7 +168,6 @@ export default function AdminPanel() {
                         </div>
 
                         <div className="grid lg:grid-cols-2 gap-8">
-                            {/* Recent Users */}
                             <Card className="p-6">
                                 <div className="flex items-center justify-between mb-6">
                                     <h2 className="text-xl font-bold text-[#1F2937]">Recent Users</h2>
@@ -160,6 +175,7 @@ export default function AdminPanel() {
                                         <Button variant="ghost" className="text-[#1E3A8A]">View All</Button>
                                     </Link>
                                 </div>
+
                                 <div className="space-y-4">
                                     {recentUsers.map((u) => (
                                         <div key={u.id} className="flex items-center justify-between p-3 hover:bg-slate-50 rounded-lg">
@@ -167,7 +183,7 @@ export default function AdminPanel() {
                                                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                                                     u.role === 'college' ? 'bg-blue-100' : 'bg-green-100'
                                                 }`}>
-                                                    {u.role === 'college' 
+                                                    {u.role === 'college'
                                                         ? <GraduationCap className="w-5 h-5 text-blue-600" />
                                                         : <Building2 className="w-5 h-5 text-green-600" />
                                                     }
@@ -177,19 +193,12 @@ export default function AdminPanel() {
                                                     <p className="text-sm text-slate-500">{u.email}</p>
                                                 </div>
                                             </div>
-                                            <Badge className={
-                                                u.status === 'active' ? 'bg-green-100 text-green-700' :
-                                                u.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                                                'bg-red-100 text-red-700'
-                                            }>
-                                                {u.status}
-                                            </Badge>
+                                            <Badge>{u.status}</Badge>
                                         </div>
                                     ))}
                                 </div>
                             </Card>
 
-                            {/* Recent Events */}
                             <Card className="p-6">
                                 <div className="flex items-center justify-between mb-6">
                                     <h2 className="text-xl font-bold text-[#1F2937]">Recent Events</h2>
@@ -197,6 +206,7 @@ export default function AdminPanel() {
                                         <Button variant="ghost" className="text-[#1E3A8A]">View All</Button>
                                     </Link>
                                 </div>
+
                                 <div className="space-y-4">
                                     {recentEvents.map((event) => (
                                         <div key={event.id} className="flex items-center gap-4 p-3 hover:bg-slate-50 rounded-lg">
@@ -215,6 +225,7 @@ export default function AdminPanel() {
                                 </div>
                             </Card>
                         </div>
+
                     </div>
                 </main>
             </div>
