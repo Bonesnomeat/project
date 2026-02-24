@@ -18,7 +18,7 @@ import { Badge } from "C:/Users/USER/sponza/project/my-app/src/components/ui/bad
 import { dummyAdminStats, allUsers, dummyEvents } 
 from 'C:/Users/USER/sponza/project/my-app/src/components/data/dummyData';
 
-const SECRET = 'sponza@admin123';
+const SECRET = 'sponza123';
 
 function PassphraseGate({ onUnlock }) {
     const [pass, setPass] = useState('');

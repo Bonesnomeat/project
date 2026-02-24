@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
     LayoutDashboard, Users, Calendar, FileText, 
-    BarChart3, Search, Filter, MoreVertical,
+    BarChart3, Search, MoreVertical,
     GraduationCap, Building2, Shield, Ban, CheckCircle
 } from 'lucide-react';
 
 import { createPageUrl } from 'C:/Users/USER/sponza/project/my-app/src/utils';
-
 import Sidebar from '../components/shared/Sidebar';
 import DashboardHeader from '../components/shared/DashboardHeader';
 
@@ -16,23 +15,8 @@ import { Button } from "C:/Users/USER/sponza/project/my-app/src/components/ui/bu
 import { Input } from "C:/Users/USER/sponza/project/my-app/src/components/ui/input";
 import { Badge } from "C:/Users/USER/sponza/project/my-app/src/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "C:/Users/USER/sponza/project/my-app/src/components/ui/select";
-
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "C:/Users/USER/sponza/project/my-app/src/components/ui/table";
-
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "C:/Users/USER/sponza/project/my-app/src/components/ui/dropdown-menu";
-
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "C:/Users/USER/sponza/project/my-app/src/components/ui/table";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "C:/Users/USER/sponza/project/my-app/src/components/ui/dropdown-menu";
 import { allUsers } from 'C:/Users/USER/sponza/project/my-app/src/components/data/dummyData';
 
 export default function AdminUsers() {
@@ -44,21 +28,29 @@ export default function AdminUsers() {
     const [statusFilter, setStatusFilter] = useState('all');
 
     useEffect(() => {
+        // ✅ Check sessionStorage for admin unlock
+        const adminUnlocked = sessionStorage.getItem('admin_unlocked') === 'true';
+        if (!adminUnlocked) {
+            navigate(createPageUrl('AdminPanel'));
+            return;
+        }
         const auth = localStorage.getItem('sponza_auth');
-        if (!auth) {
-            navigate(createPageUrl('SignIn'));
-            return;
+        if (auth) {
+            const parsed = JSON.parse(auth);
+            setUser(parsed);
+        } else {
+            setUser({
+                id: 'admin-1',
+                name: 'Admin',
+                email: 'admin@sponza.com',
+                role: 'admin',
+            });
         }
-        const parsed = JSON.parse(auth);
-        if (parsed.role !== 'admin') {
-            navigate(createPageUrl('Home'));
-            return;
-        }
-        setUser(parsed);
     }, [navigate]);
 
     const handleLogout = () => {
         localStorage.removeItem('sponza_auth');
+        sessionStorage.removeItem('admin_unlocked'); // ✅ Clear session on logout
         navigate(createPageUrl('Home'));
     };
 
@@ -94,7 +86,6 @@ export default function AdminUsers() {
                 setCollapsed={setSidebarCollapsed}
                 userRole="admin"
             />
-
             <div className="flex-1 flex flex-col min-h-screen">
                 <DashboardHeader 
                     user={user}
@@ -102,7 +93,6 @@ export default function AdminUsers() {
                     onMenuClick={() => setSidebarCollapsed(!sidebarCollapsed)}
                     settingsPage="AdminPanel"
                 />
-
                 <main className="flex-1 p-6 lg:p-8 overflow-auto">
                     <div className="max-w-7xl mx-auto">
                         <div className="mb-8">
@@ -121,7 +111,6 @@ export default function AdminUsers() {
                                         className="pl-10"
                                     />
                                 </div>
-
                                 <Select value={roleFilter} onValueChange={setRoleFilter}>
                                     <SelectTrigger className="w-40">
                                         <SelectValue placeholder="Role" />
@@ -132,7 +121,6 @@ export default function AdminUsers() {
                                         <SelectItem value="sponsor">Sponsor</SelectItem>
                                     </SelectContent>
                                 </Select>
-
                                 <Select value={statusFilter} onValueChange={setStatusFilter}>
                                     <SelectTrigger className="w-40">
                                         <SelectValue placeholder="Status" />
@@ -159,7 +147,6 @@ export default function AdminUsers() {
                                             <TableHead className="w-12"></TableHead>
                                         </TableRow>
                                     </TableHeader>
-
                                     <TableBody>
                                         {filteredUsers.map((u) => (
                                             <TableRow key={u.id}>
@@ -176,15 +163,10 @@ export default function AdminUsers() {
                                                         </div>
                                                     </div>
                                                 </TableCell>
-
                                                 <TableCell>
-                                                    <Badge variant="outline" className="capitalize">
-                                                        {u.role}
-                                                    </Badge>
+                                                    <Badge variant="outline" className="capitalize">{u.role}</Badge>
                                                 </TableCell>
-
                                                 <TableCell className="text-slate-600">{u.joinDate}</TableCell>
-
                                                 <TableCell>
                                                     <Badge className={
                                                         u.status === 'active' ? 'bg-green-100 text-green-700' :
@@ -194,7 +176,6 @@ export default function AdminUsers() {
                                                         {u.status}
                                                     </Badge>
                                                 </TableCell>
-
                                                 <TableCell>
                                                     <DropdownMenu>
                                                         <DropdownMenuTrigger asChild>

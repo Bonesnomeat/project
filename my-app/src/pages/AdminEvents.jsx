@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
     LayoutDashboard, Users, Calendar, FileText, 
-    BarChart3, Search, Filter, MoreVertical,
-    Eye, CheckCircle, XCircle, Trash2
+    BarChart3, Search, MoreVertical,
+    Eye, CheckCircle, Trash2
 } from 'lucide-react';
 import { createPageUrl } from 'C:/Users/USER/sponza/project/my-app/src/utils';
 import Sidebar from '../components/shared/Sidebar';
@@ -13,20 +13,8 @@ import { Button } from "C:/Users/USER/sponza/project/my-app/src/components/ui/bu
 import { Input } from "C:/Users/USER/sponza/project/my-app/src/components/ui/input";
 import { Badge } from "C:/Users/USER/sponza/project/my-app/src/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "C:/Users/USER/sponza/project/my-app/src/components/ui/select";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "C:/Users/USER/sponza/project/my-app/src/components/ui/table";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "C:/Users/USER/sponza/project/my-app/src/components/ui/dropdown-menu";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "C:/Users/USER/sponza/project/my-app/src/components/ui/table";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "C:/Users/USER/sponza/project/my-app/src/components/ui/dropdown-menu";
 import { dummyEvents } from 'C:/Users/USER/sponza/project/my-app/src/components/data/dummyData';
 
 export default function AdminEvents() {
@@ -37,23 +25,29 @@ export default function AdminEvents() {
     const [categoryFilter, setCategoryFilter] = useState('all');
 
     useEffect(() => {
-        const auth = localStorage.getItem('sponza_auth');
-        if (!auth) {
-            // ✅ No session — send back to AdminPanel to unlock via passphrase
+        // ✅ Check sessionStorage for admin unlock
+        const adminUnlocked = sessionStorage.getItem('admin_unlocked') === 'true';
+        if (!adminUnlocked) {
             navigate(createPageUrl('AdminPanel'));
             return;
         }
-        const parsed = JSON.parse(auth);
-        if (parsed.role !== 'admin') {
-            // ✅ Not admin — send home
-            navigate(createPageUrl('Home'));
-            return;
+        const auth = localStorage.getItem('sponza_auth');
+        if (auth) {
+            const parsed = JSON.parse(auth);
+            setUser(parsed);
+        } else {
+            setUser({
+                id: 'admin-1',
+                name: 'Admin',
+                email: 'admin@sponza.com',
+                role: 'admin',
+            });
         }
-        setUser(parsed);
     }, [navigate]);
 
     const handleLogout = () => {
         localStorage.removeItem('sponza_auth');
+        sessionStorage.removeItem('admin_unlocked'); // ✅ Clear session on logout
         navigate(createPageUrl('Home'));
     };
 
@@ -81,7 +75,6 @@ export default function AdminEvents() {
                 setCollapsed={setSidebarCollapsed}
                 userRole="admin"
             />
-
             <div className="flex-1 flex flex-col min-h-screen">
                 <DashboardHeader 
                     user={user}
@@ -89,7 +82,6 @@ export default function AdminEvents() {
                     onMenuClick={() => setSidebarCollapsed(!sidebarCollapsed)}
                     settingsPage="AdminPanel"
                 />
-
                 <main className="flex-1 p-6 lg:p-8 overflow-auto">
                     <div className="max-w-7xl mx-auto">
                         <div className="mb-8">
