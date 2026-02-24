@@ -121,7 +121,7 @@ export default function AdminReports() {
                             <Card className="p-6">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <p className="text-sm text-slate-500">Total Revenue</p>
+                                        <p className="text-sm text-slate-500">Total Sponser Raised</p>
                                         <p className="text-2xl font-bold text-[#1F2937] mt-1">$2.5M</p>
                                     </div>
                                     <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
@@ -182,7 +182,7 @@ export default function AdminReports() {
 
                         <div className="grid lg:grid-cols-2 gap-8 mb-8">
                             <Card className="p-6">
-                                <h2 className="text-xl font-bold text-[#1F2937] mb-6">Revenue Trend</h2>
+                                <h2 className="text-xl font-bold text-[#1F2937] mb-6">User Trend</h2>
                                 <div className="h-80">
                                     <ResponsiveContainer width="100%" height="100%">
                                         <AreaChart data={revenueData}>
