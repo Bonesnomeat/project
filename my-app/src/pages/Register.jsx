@@ -197,7 +197,7 @@ export default function Register() {
     const industries = ['Technology', 'Finance', 'Healthcare', 'Education', 'Retail', 'Manufacturing', 'Media', 'Other'];
     const companySizes = ['1-10', '11-50', '51-200', '201-500', '500+'];
     const collegeTypes = ['University', 'College', 'Institute', 'Academy', 'School'];
-    const budgetRanges = ['$1,000 - $5,000', '$5,000 - $10,000', '$10,000 - $25,000', '$25,000 - $50,000', '$50,000+'];
+    const budgetRanges = ['1,000 - 5,000', '5,000 - 10,000', '10,000 - 25,000', '25,000 -50,000', '50,000+'];
 
     return (
         <>
@@ -373,6 +373,9 @@ export default function Register() {
                                                 <Field label="Location" error={errors.location}>
                                                     <StyledInput placeholder="City, State" value={formData.location} onChange={e => handleInputChange('location', e.target.value)} />
                                                 </Field>
+                                                <Field label="AISHE CODE" error={errors.aisheCode}>
+                                                    <StyledInput placeholder="Enter AISHE CODE" value={formData.aisheCode} onChange={e => handleInputChange('aisheCode', e.target.value)} />
+                                                </Field>
                                             </div>
                                             <Field label="Website (Optional)">
                                                 <StyledInput placeholder="https://..." value={formData.website} onChange={e => handleInputChange('website', e.target.value)} />
@@ -388,7 +391,7 @@ export default function Register() {
                                                     <StyledSelect value={formData.industry} onChange={v => handleInputChange('industry', v)} options={industries} placeholder="Select industry" />
                                                 </Field>
                                                 <Field label="Company Size">
-                                                    <StyledSelect value={formData.companySize} onChange={v => handleInputChange('companySize', v)} options={companySizes} placeholder="Employees" />
+                                                    <StyledSelect value={formData.companySize} onChange={v => handleInputChange('companySize', v)} options={companySizes} placeholder="No.of.Employees" />
                                                 </Field>
                                             </div>
                                             <Field label="Typical Sponsorship Budget">

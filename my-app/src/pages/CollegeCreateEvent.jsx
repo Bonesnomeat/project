@@ -21,6 +21,9 @@ export default function CollegeCreateEvent() {
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(false);
+
+    // ✅ Tomorrow's date in YYYY-MM-DD format
+    const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
     
     const [formData, setFormData] = useState({
         title: '',
@@ -226,6 +229,8 @@ export default function CollegeCreateEvent() {
                                                 onChange={(e) => handleInputChange('date', e.target.value)}
                                                 className="mt-1"
                                                 required
+                                                // ✅ Only future dates allowed — today and past are disabled
+                                                min={tomorrow}
                                             />
                                         </div>
 
@@ -236,6 +241,8 @@ export default function CollegeCreateEvent() {
                                                 value={formData.endDate}
                                                 onChange={(e) => handleInputChange('endDate', e.target.value)}
                                                 className="mt-1"
+                                                // ✅ End date must be after start date (or tomorrow if no start date selected)
+                                                min={formData.date || tomorrow}
                                             />
                                         </div>
                                     </div>

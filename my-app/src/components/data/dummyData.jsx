@@ -82,7 +82,7 @@ export const dummyEvents = [
         expectedAttendees: 8000,
         minSponsorship: 10000,
         maxSponsorship: 100000,
-        image: 'https://images.unsplash.com/photo-1461896836934- voices-of-the-mountains?w=800&h=400&fit=crop',
+        image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&h=400&fit=crop',
         college: 'Central University',
         status: 'Open',
         featured: true,

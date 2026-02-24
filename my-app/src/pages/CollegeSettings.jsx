@@ -167,6 +167,10 @@ export default function CollegeSettings() {
                                                 <Input defaultValue={user.location || 'San Francisco, CA'} className="mt-1" />
                                             </div>
                                             <div>
+                                                <Label>AISHE CODE</Label>
+                                                <Input defaultValue={user.aisheCode || '123456'} className="mt-1" />
+                                            </div>
+                                            <div>
                                                 <Label>Website</Label>
                                                 <Input defaultValue="https://techuniversity.edu" className="mt-1" />
                                             </div>

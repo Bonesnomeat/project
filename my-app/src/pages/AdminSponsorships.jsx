@@ -27,21 +27,29 @@ export default function AdminSponsorships() {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
+        // ✅ Check sessionStorage for admin unlock
+        const adminUnlocked = sessionStorage.getItem('admin_unlocked') === 'true';
+        if (!adminUnlocked) {
+            navigate(createPageUrl('AdminPanel'));
+            return;
+        }
         const auth = localStorage.getItem('sponza_auth');
-        if (!auth) {
-            navigate(createPageUrl('SignIn'));
-            return;
+        if (auth) {
+            const parsed = JSON.parse(auth);
+            setUser(parsed);
+        } else {
+            setUser({
+                id: 'admin-1',
+                name: 'Admin',
+                email: 'admin@sponza.com',
+                role: 'admin',
+            });
         }
-        const parsed = JSON.parse(auth);
-        if (parsed.role !== 'admin') {
-            navigate(createPageUrl('Home'));
-            return;
-        }
-        setUser(parsed);
     }, [navigate]);
 
     const handleLogout = () => {
         localStorage.removeItem('sponza_auth');
+        sessionStorage.removeItem('admin_unlocked'); // ✅ Clear session on logout
         navigate(createPageUrl('Home'));
     };
 
@@ -104,11 +112,15 @@ export default function AdminSponsorships() {
                             </Card>
                             <Card className="p-6">
                                 <p className="text-sm text-slate-500">Active Deals</p>
-                                <p className="text-3xl font-bold text-[#22C55E] mt-2">{dummySponsorshipRequests.filter(r => r.status === 'approved').length}</p>
+                                <p className="text-3xl font-bold text-[#22C55E] mt-2">
+                                    {dummySponsorshipRequests.filter(r => r.status === 'approved').length}
+                                </p>
                             </Card>
                             <Card className="p-6">
                                 <p className="text-sm text-slate-500">Pending Requests</p>
-                                <p className="text-3xl font-bold text-[#1F2937] mt-2">{dummySponsorshipRequests.filter(r => r.status === 'pending').length}</p>
+                                <p className="text-3xl font-bold text-[#1F2937] mt-2">
+                                    {dummySponsorshipRequests.filter(r => r.status === 'pending').length}
+                                </p>
                             </Card>
                         </div>
 
