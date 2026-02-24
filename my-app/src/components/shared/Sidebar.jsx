@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from "C:/Users/USER/sponza/project/my-app/src/lib/utils";
 import { createPageUrl } from "C:/Users/USER/sponza/project/my-app/src/utils";
+import logoSrc from 'C:/Users/USER/sponza/project/my-app/public/img/sponza_logo_dark_blue.png';
 
 export default function Sidebar({ items, collapsed, setCollapsed, userRole }) {
     const location = useLocation();
@@ -24,16 +25,28 @@ export default function Sidebar({ items, collapsed, setCollapsed, userRole }) {
                 collapsed ? "w-0 lg:w-20 overflow-hidden lg:overflow-visible" : "w-72"
             )}>
                 <div className={cn("flex flex-col h-full", collapsed && "lg:items-center")}>
+
                     {/* Logo */}
                     <div className={cn(
                         "h-16 flex items-center border-b border-slate-100 px-4",
                         collapsed && "lg:justify-center lg:px-0"
                     )}>
-                        <Link to={createPageUrl('Home')} className="flex items-center gap-2">
-                            <div className="w-9 h-9 bg-gradient-to-br from-[#1E3A8A] to-[#22C55E] rounded-xl flex items-center justify-center flex-shrink-0">
-                                <Sparkles className="w-5 h-5 text-white" />
-                            </div>
-                            {!collapsed && <span className="text-xl font-bold text-[#1E3A8A]">Sponza</span>}
+                        <Link to={createPageUrl('Home')} className="flex items-center">
+                            {collapsed ? (
+                                // ✅ Small square logo when collapsed
+                                <img
+                                    src={logoSrc}
+                                    alt="Sponza"
+                                    style={{ width: 36, height: 36, objectFit: "contain" }}
+                                />
+                            ) : (
+                                // ✅ Full wide logo when expanded
+                                <img
+                                    src={logoSrc}
+                                    alt="Sponza"
+                                    style={{ width: 140, height: "auto", objectFit: "contain" }}
+                                />
+                            )}
                         </Link>
                     </div>
 
@@ -87,6 +100,7 @@ export default function Sidebar({ items, collapsed, setCollapsed, userRole }) {
                             )}
                         </button>
                     </div>
+
                 </div>
             </aside>
         </>
