@@ -87,7 +87,6 @@ export default function SignIn() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    // ✅ CHANGE 1: Removed admin from roles array
     const roles = [
         { id: 'college', label: 'College', icon: GraduationCap, desc: 'Event Organizer' },
         { id: 'sponsor', label: 'Sponsor', icon: Building2, desc: 'Company' },
@@ -101,7 +100,6 @@ export default function SignIn() {
             const user = dummyUsers[role];
             if (user) {
                 localStorage.setItem('sponza_auth', JSON.stringify({ ...user, role }));
-                // ✅ CHANGE 2: Removed admin redirect, only college and sponsor
                 if (role === 'college') navigate(createPageUrl('CollegeDashboard'));
                 else if (role === 'sponsor') navigate(createPageUrl('SponsorDashboard'));
             }
@@ -238,7 +236,6 @@ export default function SignIn() {
                             Login in to your account
                         </p>
 
-                        {/* ✅ CHANGE 3: Role grid now 2 columns since admin removed */}
                         <div style={{
                             display: "grid", gridTemplateColumns: "1fr 1fr",
                             gap: 12, marginBottom: 28,
@@ -312,11 +309,18 @@ export default function SignIn() {
                                     <input type="checkbox" style={{ accentColor: "#24b7ff" }} />
                                     Remember me
                                 </label>
-                                <span style={{
-                                    color: "rgba(255,255,255,0.4)", fontSize: 13, cursor: "pointer",
+
+                                {/* ✅ UPDATED: Forgot Password now uses Link for navigation */}
+                                <Link to={createPageUrl('ForgotPassword')} style={{
+                                    color: "rgba(255,255,255,0.45)",
+                                    fontSize: 13,
+                                    textDecoration: "none",
+                                    display: "block",
+                                    textAlign: "right",
+                                    marginTop: 6,
                                 }}>
-                                    Forgot password?
-                                </span>
+                                    Forgot Password?
+                                </Link>
                             </div>
 
                             {error && (

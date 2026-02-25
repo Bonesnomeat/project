@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, Eye, EyeOff, Building2, GraduationCap, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, Building2, GraduationCap } from 'lucide-react';
 import { createPageUrl } from "C:/Users/USER/sponza/project/my-app/src/utils";
 import { dummyUsers } from "C:/Users/USER/sponza/project/my-app/src/components/data/dummyData";
 import logoSrc from 'C:/Users/USER/sponza/project/my-app/public/img/a-sleek-modern-logo-design-featuring-the_goDenOD7TPS-KtuXM3BUnA_RzVYVD7bSjiL0zKDsLJ0uw-Photoroom.png';
@@ -145,9 +145,12 @@ export default function Register() {
     const [formData, setFormData] = useState({
         email: '', password: '', confirmPassword: '',
         name: '', phone: '',
-        collegeName: '', collegeType: '', location: '', website: '',
-        companyName: '', industry: '', companySize: '', sponsorshipBudget: '',
+        // College fields
+        collegeName: '', collegeType: '', location: '', website: '', aisheCode: '',
+        // Sponsor fields — only company name and website remain
+        companyName: '', companyWebsite: '',
     });
+
     const [errors, setErrors] = useState({});
 
     const handleInputChange = (field, value) => {
@@ -155,29 +158,99 @@ export default function Register() {
         if (errors[field]) setErrors(prev => ({ ...prev, [field]: '' }));
     };
 
+    // ✅ Step 1 Validations
     const validateStep1 = () => {
         const e = {};
+
         if (!role) e.role = 'Please select a role';
-        if (!formData.email) e.email = 'Email is required';
-        if (!formData.password) e.password = 'Password is required';
-        if (formData.password.length < 8) e.password = 'Minimum 8 characters';
-        if (formData.password !== formData.confirmPassword) e.confirmPassword = 'Passwords do not match';
+
+        if (!formData.email) {
+            e.email = 'Email is required';
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+            e.email = 'Enter a valid email address';
+        }
+
+        if (!formData.password) {
+            e.password = 'Password is required';
+        } else if (formData.password.length < 8) {
+            e.password = 'Minimum 8 characters required';
+        } else if (!/[A-Z]/.test(formData.password)) {
+            e.password = 'Must contain at least one uppercase letter';
+        } else if (!/[0-9]/.test(formData.password)) {
+            e.password = 'Must contain at least one number';
+        } else if (!/[!@#$%^&*]/.test(formData.password)) {
+            e.password = 'Must contain at least one special character (!@#$%^&*)';
+        }
+
+        if (!formData.confirmPassword) {
+            e.confirmPassword = 'Please confirm your password';
+        } else if (formData.password !== formData.confirmPassword) {
+            e.confirmPassword = 'Passwords do not match';
+        }
+
         setErrors(e);
         return Object.keys(e).length === 0;
     };
 
+    // ✅ Step 2 Validations
     const validateStep2 = () => {
         const e = {};
-        if (!formData.name) e.name = 'Name is required';
-        if (!formData.phone) e.phone = 'Phone is required';
-        if (role === 'college') {
-            if (!formData.collegeName) e.collegeName = 'Required';
-            if (!formData.collegeType) e.collegeType = 'Required';
-            if (!formData.location) e.location = 'Required';
-        } else {
-            if (!formData.companyName) e.companyName = 'Required';
-            if (!formData.industry) e.industry = 'Required';
+
+        // Contact Name
+        if (!formData.name) {
+            e.name = 'Contact name is required';
+        } else if (formData.name.trim().length < 3) {
+            e.name = 'Name must be at least 3 characters';
+        } else if (!/^[a-zA-Z\s]+$/.test(formData.name)) {
+            e.name = 'Name must contain only letters';
         }
+
+        // Phone
+        if (!formData.phone) {
+            e.phone = 'Phone number is required';
+        } else if (!/^[6-9]\d{9}$/.test(formData.phone.replace(/\s/g, ''))) {
+            e.phone = 'Enter a valid 10-digit Indian mobile number';
+        }
+
+        if (role === 'college') {
+            if (!formData.collegeName) {
+                e.collegeName = 'College name is required';
+            } else if (formData.collegeName.trim().length < 3) {
+                e.collegeName = 'College name must be at least 3 characters';
+            }
+
+            if (!formData.collegeType) e.collegeType = 'Please select college type';
+
+            if (!formData.location) {
+                e.location = 'Location is required';
+            } else if (formData.location.trim().length < 3) {
+                e.location = 'Enter a valid city and state';
+            }
+
+            // AISHE Code — optional but format must match if entered
+            if (formData.aisheCode && !/^[A-Z]-\d{5}$/.test(formData.aisheCode.toUpperCase())) {
+                e.aisheCode = 'Invalid AISHE Code format (e.g. C-12345)';
+            }
+
+            // Website — optional but must be valid URL if entered
+            if (formData.website && !/^https?:\/\/.+\..+/.test(formData.website)) {
+                e.website = 'Enter a valid URL (e.g. https://college.edu)';
+            }
+
+        } else {
+            // Sponsor — only company name required
+            if (!formData.companyName) {
+                e.companyName = 'Company name is required';
+            } else if (formData.companyName.trim().length < 2) {
+                e.companyName = 'Company name must be at least 2 characters';
+            }
+
+            // Company website — optional but must be valid URL if entered
+            if (formData.companyWebsite && !/^https?:\/\/.+\..+/.test(formData.companyWebsite)) {
+                e.companyWebsite = 'Enter a valid URL (e.g. https://company.com)';
+            }
+        }
+
         setErrors(e);
         return Object.keys(e).length === 0;
     };
@@ -189,15 +262,18 @@ export default function Register() {
         if (!validateStep2()) return;
         setLoading(true);
         setTimeout(() => {
-            localStorage.setItem('sponza_auth', JSON.stringify({ id: Date.now(), email: formData.email, name: formData.name, role, ...formData }));
+            localStorage.setItem('sponza_auth', JSON.stringify({
+                id: Date.now(),
+                email: formData.email,
+                name: formData.name,
+                role,
+                ...formData
+            }));
             navigate(role === 'college' ? createPageUrl('CollegeDashboard') : createPageUrl('SponsorDashboard'));
         }, 1500);
     };
 
-    const industries = ['Technology', 'Finance', 'Healthcare', 'Education', 'Retail', 'Manufacturing', 'Media', 'Other'];
-    const companySizes = ['1-10', '11-50', '51-200', '201-500', '500+'];
     const collegeTypes = ['University', 'College', 'Institute', 'Academy', 'School'];
-    const budgetRanges = ['1,000 - 5,000', '5,000 - 10,000', '10,000 - 25,000', '25,000 -50,000', '50,000+'];
 
     return (
         <>
@@ -269,7 +345,7 @@ export default function Register() {
                                 Step {step} of 2 — {step === 1 ? 'Credentials' : 'Organization'}
                             </p>
 
-                            <Link to={createPageUrl('Home')} style={{ display:"inline-block", marginTop:48, color:"rgba(255,255,255,0.5)", fontSize:15}}>
+                            <Link to={createPageUrl('Home')} style={{ display:"inline-block", marginTop:48, color:"rgba(255,255,255,0.5)", fontSize:15 }}>
                                 ← Back to Home
                             </Link>
                         </div>
@@ -282,7 +358,6 @@ export default function Register() {
                         padding:"36px 44px", overflowY:"auto",
                     }}>
 
-                        {/* Heading */}
                         <h1 style={{ color:THEME.color, fontSize:26, fontWeight:700, letterSpacing:"-0.5px", marginBottom:4, textAlign:"center" }}>
                             {step === 1 ? 'Create Account' : (role === 'college' ? 'College Details' : 'Company Details')}
                         </h1>
@@ -315,20 +390,34 @@ export default function Register() {
 
                                 <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
                                     <Field label="Email" error={errors.email}>
-                                        <StyledInput type="email" placeholder="Enter your email"
+                                        <StyledInput
+                                            type="email"
+                                            placeholder="Enter your email"
                                             icon={<Mail size={16} color="rgba(255,255,255,0.3)" />}
-                                            value={formData.email} onChange={e => handleInputChange('email', e.target.value)} />
+                                            value={formData.email}
+                                            onChange={e => handleInputChange('email', e.target.value)}
+                                        />
                                     </Field>
                                     <Field label="Password" error={errors.password}>
-                                        <StyledInput type="password" placeholder="Create a password (min 8 chars)"
+                                        <StyledInput
+                                            type="password"
+                                            placeholder="Min 8 chars, uppercase, number, special char"
                                             icon={<Lock size={16} color="rgba(255,255,255,0.3)" />}
-                                            value={formData.password} onChange={e => handleInputChange('password', e.target.value)}
-                                            showToggle onToggle={() => setShowPassword(!showPassword)} showPassword={showPassword} />
+                                            value={formData.password}
+                                            onChange={e => handleInputChange('password', e.target.value)}
+                                            showToggle
+                                            onToggle={() => setShowPassword(!showPassword)}
+                                            showPassword={showPassword}
+                                        />
                                     </Field>
                                     <Field label="Confirm Password" error={errors.confirmPassword}>
-                                        <StyledInput type="password" placeholder="Confirm your password"
+                                        <StyledInput
+                                            type="password"
+                                            placeholder="Confirm your password"
                                             icon={<Lock size={16} color="rgba(255,255,255,0.3)" />}
-                                            value={formData.confirmPassword} onChange={e => handleInputChange('confirmPassword', e.target.value)} />
+                                            value={formData.confirmPassword}
+                                            onChange={e => handleInputChange('confirmPassword', e.target.value)}
+                                        />
                                     </Field>
                                 </div>
 
@@ -351,51 +440,92 @@ export default function Register() {
                             <form onSubmit={handleSubmit}>
                                 <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
 
-                                    {/* Contact Name + Phone */}
+                                    {/* Contact Name + Phone — same for both roles */}
                                     <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12 }}>
-                                        <Field label="Contact Name" error={errors.name}>
-                                            <StyledInput placeholder="Your name" value={formData.name} onChange={e => handleInputChange('name', e.target.value)} />
+                                        <Field label="Contact Name *" error={errors.name}>
+                                            <StyledInput
+                                                placeholder="Full name (letters only)"
+                                                value={formData.name}
+                                                onChange={e => {
+                                                    const val = e.target.value.replace(/[^a-zA-Z\s]/g, '');
+                                                    handleInputChange('name', val);
+                                                }}
+                                            />
                                         </Field>
-                                        <Field label="Phone" error={errors.phone}>
-                                            <StyledInput placeholder="Phone number" value={formData.phone} onChange={e => handleInputChange('phone', e.target.value)} />
+                                        <Field label="Phone *" error={errors.phone}>
+                                            <StyledInput
+                                                placeholder="10-digit mobile number"
+                                                value={formData.phone}
+                                                onChange={e => {
+                                                    const val = e.target.value.replace(/\D/g, '').slice(0, 10);
+                                                    handleInputChange('phone', val);
+                                                }}
+                                            />
                                         </Field>
                                     </div>
 
+                                    {/* ── College Fields ── */}
                                     {role === 'college' ? (
                                         <>
-                                            <Field label="College Name" error={errors.collegeName}>
-                                                <StyledInput placeholder="Enter college name" value={formData.collegeName} onChange={e => handleInputChange('collegeName', e.target.value)} />
+                                            <Field label="College Name *" error={errors.collegeName}>
+                                                <StyledInput
+                                                    placeholder="Enter college name"
+                                                    value={formData.collegeName}
+                                                    onChange={e => handleInputChange('collegeName', e.target.value)}
+                                                />
                                             </Field>
+
                                             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12 }}>
-                                                <Field label="College Type" error={errors.collegeType}>
-                                                    <StyledSelect value={formData.collegeType} onChange={v => handleInputChange('collegeType', v)} options={collegeTypes} placeholder="Select type" />
+                                                <Field label="College Type *" error={errors.collegeType}>
+                                                    <StyledSelect
+                                                        value={formData.collegeType}
+                                                        onChange={v => handleInputChange('collegeType', v)}
+                                                        options={collegeTypes}
+                                                        placeholder="Select type"
+                                                    />
                                                 </Field>
-                                                <Field label="Location" error={errors.location}>
-                                                    <StyledInput placeholder="City, State" value={formData.location} onChange={e => handleInputChange('location', e.target.value)} />
-                                                </Field>
-                                                <Field label="AISHE CODE" error={errors.aisheCode}>
-                                                    <StyledInput placeholder="Enter AISHE CODE" value={formData.aisheCode} onChange={e => handleInputChange('aisheCode', e.target.value)} />
+                                                <Field label="Location *" error={errors.location}>
+                                                    <StyledInput
+                                                        placeholder="City, State"
+                                                        value={formData.location}
+                                                        onChange={e => handleInputChange('location', e.target.value)}
+                                                    />
                                                 </Field>
                                             </div>
-                                            <Field label="Website (Optional)">
-                                                <StyledInput placeholder="https://..." value={formData.website} onChange={e => handleInputChange('website', e.target.value)} />
+
+                                            <Field label="AISHE Code (Optional)" error={errors.aisheCode}>
+                                                <StyledInput
+                                                    placeholder="e.g. C-12345"
+                                                    value={formData.aisheCode}
+                                                    onChange={e => handleInputChange('aisheCode', e.target.value.toUpperCase())}
+                                                />
+                                            </Field>
+
+                                            <Field label="Website (Optional)" error={errors.website}>
+                                                <StyledInput
+                                                    placeholder="https://yourcollege.edu"
+                                                    value={formData.website}
+                                                    onChange={e => handleInputChange('website', e.target.value)}
+                                                />
                                             </Field>
                                         </>
                                     ) : (
+                                        /* ── Sponsor Fields — only Company Name + Website ── */
                                         <>
-                                            <Field label="Company Name" error={errors.companyName}>
-                                                <StyledInput placeholder="Enter company name" value={formData.companyName} onChange={e => handleInputChange('companyName', e.target.value)} />
+                                            <Field label="Company Name *" error={errors.companyName}>
+                                                <StyledInput
+                                                    placeholder="Enter company name"
+                                                    value={formData.companyName}
+                                                    onChange={e => handleInputChange('companyName', e.target.value)}
+                                                />
                                             </Field>
-                                            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12 }}>
-                                                <Field label="Industry" error={errors.industry}>
-                                                    <StyledSelect value={formData.industry} onChange={v => handleInputChange('industry', v)} options={industries} placeholder="Select industry" />
-                                                </Field>
-                                                <Field label="Company Size">
-                                                    <StyledSelect value={formData.companySize} onChange={v => handleInputChange('companySize', v)} options={companySizes} placeholder="No.of.Employees" />
-                                                </Field>
-                                            </div>
-                                            <Field label="Typical Sponsorship Budget">
-                                                <StyledSelect value={formData.sponsorshipBudget} onChange={v => handleInputChange('sponsorshipBudget', v)} options={budgetRanges} placeholder="Select range" />
+
+                                            <Field label="Company Website (Optional)" error={errors.companyWebsite}>
+                                                <StyledInput
+                                                    placeholder="https://yourcompany.com"
+                                                    value={formData.companyWebsite}
+                                                    onChange={e => handleInputChange('companyWebsite', e.target.value)}
+                                                />
                                             </Field>
                                         </>
                                     )}
@@ -434,7 +564,7 @@ export default function Register() {
                         <p style={{ color:"rgba(255,255,255,0.3)", fontSize:13, textAlign:"center", marginTop:24 }}>
                             Already have an account?{" "}
                             <Link to={createPageUrl('SignIn')} style={{ color:"rgba(255,255,255,0.65)", textDecoration:"none", fontWeight:600 }}>
-                                Sign in
+                                Login
                             </Link>
                         </p>
                     </div>

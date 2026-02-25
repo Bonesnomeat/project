@@ -15,6 +15,16 @@ export default function Navbar({ isAuthenticated, onLogout, userRole }) {
         return createPageUrl('Home');
     };
 
+    // 👇 Scrolls to footer when Contact is clicked
+    const handleContactClick = (e) => {
+        e.preventDefault();
+        setMobileMenuOpen(false);
+        const footer = document.getElementById('footer');
+        if (footer) {
+            footer.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
     return (
         <nav className="bg-white border-b border-slate-100 sticky top-0 z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -37,7 +47,15 @@ export default function Navbar({ isAuthenticated, onLogout, userRole }) {
                         <Link to={createPageUrl('About')} className="text-[#1F2937] hover:text-[#1E3A8A] transition-colors font-medium">
                             About
                         </Link>
-                        
+
+                        {/* 👇 Changed from Link to <a> to trigger scroll */}
+                        <a
+                            href="#footer"
+                            onClick={handleContactClick}
+                            className="text-[#1F2937] hover:text-[#1E3A8A] transition-colors font-medium cursor-pointer"
+                        >
+                            Contact
+                        </a>
                     </div>
 
                     {/* Desktop Auth Buttons */}
@@ -95,6 +113,16 @@ export default function Navbar({ isAuthenticated, onLogout, userRole }) {
                             <Link to={createPageUrl('BrowseEvents')} className="px-3 py-2 text-[#1F2937] hover:bg-slate-50 rounded-lg">
                                 Browse Events
                             </Link>
+
+                            {/* 👇 Mobile Contact scroll added */}
+                            <a
+                                href="#footer"
+                                onClick={handleContactClick}
+                                className="px-3 py-2 text-[#1F2937] hover:bg-slate-50 rounded-lg cursor-pointer"
+                            >
+                                Contact
+                            </a>
+
                             <hr className="my-2" />
                             {isAuthenticated ? (
                                 <>
@@ -125,5 +153,3 @@ export default function Navbar({ isAuthenticated, onLogout, userRole }) {
         </nav>
     );
 }
-
-
