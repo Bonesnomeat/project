@@ -256,7 +256,7 @@ export default function About() {
                     </p>
                     <Link to={createPageUrl('Register')}>
                         <Button size="lg" className="bg-[#1E3A8A] hover:bg-[#1E3A8A]/90 text-white px-8 h-14 text-lg">
-                            Create Free Account
+                            Create Your Account
                             <ArrowRight className="ml-2 w-5 h-5" />
                         </Button>
                     </Link>
