@@ -36,7 +36,7 @@ export const dummyEvents = [
         title: 'TechFest 2024',
         description: 'The biggest technology festival featuring hackathons, workshops, and keynotes from industry leaders.',
         category: 'Tech',
-        date: 'March 15-17, 2024',
+        date: 'March 15-17, 2026',
         location: ' San Francisco',
         expectedAttendees: 5000,
         minSponsorship: 5000,
