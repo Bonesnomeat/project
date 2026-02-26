@@ -141,13 +141,13 @@ export default function Register() {
     const [role, setRole] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
+    // ✅ NEW: success state to show confirmation before redirect
+    const [registrationDone, setRegistrationDone] = useState(false);
 
     const [formData, setFormData] = useState({
         email: '', password: '', confirmPassword: '',
         name: '', phone: '',
-        // College fields
         collegeName: '', collegeType: '', location: '', website: '', aisheCode: '',
-        // Sponsor fields — only company name and website remain
         companyName: '', companyWebsite: '',
     });
 
@@ -158,18 +158,14 @@ export default function Register() {
         if (errors[field]) setErrors(prev => ({ ...prev, [field]: '' }));
     };
 
-    // ✅ Step 1 Validations
     const validateStep1 = () => {
         const e = {};
-
         if (!role) e.role = 'Please select a role';
-
         if (!formData.email) {
             e.email = 'Email is required';
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
             e.email = 'Enter a valid email address';
         }
-
         if (!formData.password) {
             e.password = 'Password is required';
         } else if (formData.password.length < 8) {
@@ -181,22 +177,17 @@ export default function Register() {
         } else if (!/[!@#$%^&*]/.test(formData.password)) {
             e.password = 'Must contain at least one special character (!@#$%^&*)';
         }
-
         if (!formData.confirmPassword) {
             e.confirmPassword = 'Please confirm your password';
         } else if (formData.password !== formData.confirmPassword) {
             e.confirmPassword = 'Passwords do not match';
         }
-
         setErrors(e);
         return Object.keys(e).length === 0;
     };
 
-    // ✅ Step 2 Validations
     const validateStep2 = () => {
         const e = {};
-
-        // Contact Name
         if (!formData.name) {
             e.name = 'Contact name is required';
         } else if (formData.name.trim().length < 3) {
@@ -204,53 +195,39 @@ export default function Register() {
         } else if (!/^[a-zA-Z\s]+$/.test(formData.name)) {
             e.name = 'Name must contain only letters';
         }
-
-        // Phone
         if (!formData.phone) {
             e.phone = 'Phone number is required';
         } else if (!/^[6-9]\d{9}$/.test(formData.phone.replace(/\s/g, ''))) {
             e.phone = 'Enter a valid 10-digit Indian mobile number';
         }
-
         if (role === 'college') {
             if (!formData.collegeName) {
                 e.collegeName = 'College name is required';
             } else if (formData.collegeName.trim().length < 3) {
                 e.collegeName = 'College name must be at least 3 characters';
             }
-
             if (!formData.collegeType) e.collegeType = 'Please select college type';
-
             if (!formData.location) {
                 e.location = 'Location is required';
             } else if (formData.location.trim().length < 3) {
                 e.location = 'Enter a valid city and state';
             }
-
-            // AISHE Code — optional but format must match if entered
             if (formData.aisheCode && !/^[A-Z]-\d{5}$/.test(formData.aisheCode.toUpperCase())) {
                 e.aisheCode = 'Invalid AISHE Code format (e.g. C-12345)';
             }
-
-            // Website — optional but must be valid URL if entered
             if (formData.website && !/^https?:\/\/.+\..+/.test(formData.website)) {
                 e.website = 'Enter a valid URL (e.g. https://college.edu)';
             }
-
         } else {
-            // Sponsor — only company name required
             if (!formData.companyName) {
                 e.companyName = 'Company name is required';
             } else if (formData.companyName.trim().length < 2) {
                 e.companyName = 'Company name must be at least 2 characters';
             }
-
-            // Company website — optional but must be valid URL if entered
             if (formData.companyWebsite && !/^https?:\/\/.+\..+/.test(formData.companyWebsite)) {
                 e.companyWebsite = 'Enter a valid URL (e.g. https://company.com)';
             }
         }
-
         setErrors(e);
         return Object.keys(e).length === 0;
     };
@@ -262,18 +239,136 @@ export default function Register() {
         if (!validateStep2()) return;
         setLoading(true);
         setTimeout(() => {
-            localStorage.setItem('sponza_auth', JSON.stringify({
+            const baseUser = {
                 id: Date.now(),
                 email: formData.email,
                 name: formData.name,
+                phone: formData.phone,
                 role,
-                ...formData
-            }));
-            navigate(role === 'college' ? createPageUrl('CollegeDashboard') : createPageUrl('SponsorDashboard'));
+                ...formData,
+            };
+
+            // ✅ Save full user to sponza_registered (used at login)
+            localStorage.setItem('sponza_registered', JSON.stringify(baseUser));
+
+            if (role === 'college') {
+                // ✅ Pre-populate CollegeSettings profile tab (sponza_auth)
+                localStorage.setItem('sponza_auth', JSON.stringify({
+                    ...baseUser,
+                    designation: '',
+                }));
+
+                // ✅ Pre-populate CollegeSettings organization tab
+                localStorage.setItem('sponza_college_profile', JSON.stringify({
+                    basicForm: {
+                        collegeName:     formData.collegeName  || '',
+                        university:      '',
+                        establishedYear: '',
+                        collegeType:     formData.collegeType  || 'Private',
+                        naacGrade:       'A',
+                        aisheCode:       formData.aisheCode    || '',
+                    },
+                    contactForm: {
+                        officialEmail: formData.email    || '',
+                        phone:         formData.phone    || '',
+                        website:       formData.website  || '',
+                        address:       '',
+                        city:          formData.location ? formData.location.split(',')[0]?.trim() : '',
+                        state:         formData.location ? formData.location.split(',')[1]?.trim() : '',
+                        pincode:       '',
+                    },
+                    aboutForm: {
+                        description:     '',
+                        studentStrength: '',
+                    },
+                }));
+
+            } else {
+                // ✅ Pre-populate SponsorSettings profile tab (sponza_auth)
+                localStorage.setItem('sponza_auth', JSON.stringify({
+                    ...baseUser,
+                    designation:   '',
+                    whatsapp:      '',
+                    officialEmail: formData.email || '',
+                    companyName:   formData.companyName    || '',
+                    companyWebsite: formData.companyWebsite || '',
+                }));
+            }
+
+            setLoading(false);
+            setRegistrationDone(true);
+
+            // ✅ Redirect to SignIn after 2 seconds
+            setTimeout(() => {
+                navigate(createPageUrl('SignIn'));
+            }, 2000);
         }, 1500);
     };
 
     const collegeTypes = ['University', 'College', 'Institute', 'Academy', 'School'];
+
+    // ✅ SUCCESS SCREEN — shown briefly before redirect
+    if (registrationDone) {
+        return (
+            <>
+                <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+                <div style={{
+                    backgroundColor: THEME.bgColor, minHeight: "100vh", width: "100%",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontFamily: "Poppins, sans-serif",
+                }}>
+                    <div style={{ textAlign: "center", padding: "40px" }}>
+                        {/* Animated checkmark */}
+                        <div style={{
+                            width: 80, height: 80, borderRadius: "50%",
+                            background: "rgba(34,197,94,0.15)",
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                            margin: "0 auto 24px",
+                            border: "2px solid rgba(34,197,94,0.4)",
+                        }}>
+                            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#22C55E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                        </div>
+                        <h2 style={{ color: THEME.color, fontSize: 24, fontWeight: 700, marginBottom: 8 }}>
+                            Account Created!
+                        </h2>
+                        <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 14, marginBottom: 6 }}>
+                            Welcome to Sponza, <span style={{ color: "rgba(255,255,255,0.8)", fontWeight: 600 }}>{formData.name}</span>!
+                        </p>
+                        <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 13 }}>
+                            Redirecting you to Sign In...
+                        </p>
+                        {/* Loading dots */}
+                        <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 20 }}>
+                            {[0, 1, 2].map(i => (
+                                <div key={i} style={{
+                                    width: 8, height: 8, borderRadius: "50%",
+                                    background: "#24b7ff",
+                                    animation: `pulse 1.2s ease-in-out ${i * 0.2}s infinite`,
+                                }} />
+                            ))}
+                        </div>
+                        <style>{`
+                            @keyframes pulse {
+                                0%, 100% { opacity: 0.3; transform: scale(0.8); }
+                                50% { opacity: 1; transform: scale(1.2); }
+                            }
+                        `}</style>
+                        <p style={{ marginTop: 24, color: "rgba(255,255,255,0.2)", fontSize: 12 }}>
+                            Not redirecting?{" "}
+                            <span
+                                onClick={() => navigate(createPageUrl('SignIn'))}
+                                style={{ color: "#24b7ff", cursor: "pointer", textDecoration: "underline" }}
+                            >
+                                Click here
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </>
+        );
+    }
 
     return (
         <>
@@ -368,7 +463,6 @@ export default function Register() {
                         {/* ── STEP 1 ── */}
                         {step === 1 && (
                             <div>
-                                {/* Role selection */}
                                 <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:20 }}>
                                     {[
                                         { id:'college', label:'College', sub:'Event Organizer', Icon: GraduationCap },
@@ -439,8 +533,6 @@ export default function Register() {
                         {step === 2 && (
                             <form onSubmit={handleSubmit}>
                                 <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-
-                                    {/* Contact Name + Phone — same for both roles */}
                                     <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12 }}>
                                         <Field label="Contact Name *" error={errors.name}>
                                             <StyledInput
@@ -464,7 +556,6 @@ export default function Register() {
                                         </Field>
                                     </div>
 
-                                    {/* ── College Fields ── */}
                                     {role === 'college' ? (
                                         <>
                                             <Field label="College Name *" error={errors.collegeName}>
@@ -474,7 +565,6 @@ export default function Register() {
                                                     onChange={e => handleInputChange('collegeName', e.target.value)}
                                                 />
                                             </Field>
-
                                             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12 }}>
                                                 <Field label="College Type *" error={errors.collegeType}>
                                                     <StyledSelect
@@ -492,7 +582,6 @@ export default function Register() {
                                                     />
                                                 </Field>
                                             </div>
-
                                             <Field label="AISHE Code (Optional)" error={errors.aisheCode}>
                                                 <StyledInput
                                                     placeholder="e.g. C-12345"
@@ -500,7 +589,6 @@ export default function Register() {
                                                     onChange={e => handleInputChange('aisheCode', e.target.value.toUpperCase())}
                                                 />
                                             </Field>
-
                                             <Field label="Website (Optional)" error={errors.website}>
                                                 <StyledInput
                                                     placeholder="https://yourcollege.edu"
@@ -510,7 +598,6 @@ export default function Register() {
                                             </Field>
                                         </>
                                     ) : (
-                                        /* ── Sponsor Fields — only Company Name + Website ── */
                                         <>
                                             <Field label="Company Name *" error={errors.companyName}>
                                                 <StyledInput
@@ -519,7 +606,6 @@ export default function Register() {
                                                     onChange={e => handleInputChange('companyName', e.target.value)}
                                                 />
                                             </Field>
-
                                             <Field label="Company Website (Optional)" error={errors.companyWebsite}>
                                                 <StyledInput
                                                     placeholder="https://yourcompany.com"
@@ -531,7 +617,6 @@ export default function Register() {
                                     )}
                                 </div>
 
-                                {/* Buttons */}
                                 <div style={{ display:"flex", gap:12, marginTop:22 }}>
                                     <button type="button" onClick={() => setStep(1)} className="reg-btn" style={{
                                         flex:1, background:"rgba(255,255,255,0.06)",
@@ -560,7 +645,6 @@ export default function Register() {
                             </form>
                         )}
 
-                        {/* Sign in link */}
                         <p style={{ color:"rgba(255,255,255,0.3)", fontSize:13, textAlign:"center", marginTop:24 }}>
                             Already have an account?{" "}
                             <Link to={createPageUrl('SignIn')} style={{ color:"rgba(255,255,255,0.65)", textDecoration:"none", fontWeight:600 }}>

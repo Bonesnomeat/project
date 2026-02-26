@@ -37,7 +37,7 @@ export const dummyEvents = [
         description: 'The biggest technology festival featuring hackathons, workshops, and keynotes from industry leaders.',
         category: 'Tech',
         date: 'March 15-17, 2024',
-        location: 'Tech University, San Francisco',
+        location: ' San Francisco',
         expectedAttendees: 5000,
         minSponsorship: 5000,
         maxSponsorship: 50000,

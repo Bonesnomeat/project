@@ -34,6 +34,15 @@ export default function CollegeSettings() {
     const [saveSuccess, setSaveSuccess] = useState(false);
     const [profilePhotoPreview, setProfilePhotoPreview] = useState(null);
 
+    // ── Per-tab message banners ──
+    const [profileMsg, setProfileMsg]   = useState(null);
+    const [orgMsg, setOrgMsg]           = useState(null);
+    const [securityMsg, setSecurityMsg] = useState(null);
+    const [securityErrors, setSecurityErrors] = useState({});
+    const [securityForm, setSecurityForm] = useState({
+        currentPassword: '', newPassword: '', confirmPassword: '',
+    });
+
     const [profileForm, setProfileForm] = useState({
         name: '', email: '', phone: '', designation: '',
     });
@@ -60,13 +69,19 @@ export default function CollegeSettings() {
         setUser(parsed);
         if (parsed.avatar) setProfilePhotoPreview(parsed.avatar);
 
+        // ✅ Also read registration data as fallback source
+        const regRaw = localStorage.getItem('sponza_registered');
+        const reg = regRaw ? JSON.parse(regRaw) : {};
+
+        // Profile tab — prefer sponza_auth, fall back to sponza_registered
         setProfileForm({
-            name:        parsed.name        || '',
-            email:       parsed.email       || '',
-            phone:       parsed.phone       || '',
-            designation: parsed.designation || '',
+            name:        parsed.name        || reg.name        || '',
+            email:       parsed.email       || reg.email       || '',
+            phone:       parsed.phone       || reg.phone       || '',
+            designation: parsed.designation || reg.designation || '',
         });
 
+        // Organization tab — prefer sponza_college_profile, fall back to registration data
         const saved = localStorage.getItem('sponza_college_profile');
         if (saved) {
             const p = JSON.parse(saved);
@@ -74,10 +89,28 @@ export default function CollegeSettings() {
             if (p.contactForm) setContactForm(p.contactForm);
             if (p.aboutForm)   setAboutForm(p.aboutForm);
         } else {
-            setBasicForm(prev   => ({ ...prev, collegeName:   parsed.collegeName || parsed.name || '' }));
-            setContactForm(prev => ({ ...prev, officialEmail: parsed.email || '', phone: parsed.phone || '' }));
+            // ✅ Pre-fill from registration data
+            setBasicForm(prev => ({
+                ...prev,
+                collegeName:  parsed.collegeName  || reg.collegeName  || parsed.name || '',
+                collegeType:  parsed.collegeType  || reg.collegeType  || 'Private',
+                aisheCode:    parsed.aisheCode    || reg.aisheCode    || '',
+            }));
+            setContactForm(prev => ({
+                ...prev,
+                officialEmail: parsed.email       || reg.email        || '',
+                phone:         parsed.phone       || reg.phone        || '',
+                website:       parsed.website     || reg.website      || '',
+                city:  reg.location ? reg.location.split(',')[0]?.trim() : (parsed.city  || ''),
+                state: reg.location ? reg.location.split(',')[1]?.trim() : (parsed.state || ''),
+            }));
         }
     }, [navigate]);
+
+    const showMsg = (setter, type, text) => {
+        setter({ type, text });
+        setTimeout(() => setter(null), 3000);
+    };
 
     const handleLogout = () => {
         localStorage.removeItem('sponza_auth');
@@ -93,21 +126,75 @@ export default function CollegeSettings() {
         }
     };
 
-    const showSuccess = () => {
-        setSaveSuccess(true);
-        setTimeout(() => setSaveSuccess(false), 3000);
-    };
-
     const handleSaveProfile = () => {
+        if (!profileForm.name.trim()) {
+            showMsg(setProfileMsg, 'error', 'Contact name is required.');
+            return;
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(profileForm.email)) {
+            showMsg(setProfileMsg, 'error', 'Enter a valid email address.');
+            return;
+        }
         const updatedUser = { ...user, ...profileForm, avatar: profilePhotoPreview || user.avatar };
         localStorage.setItem('sponza_auth', JSON.stringify(updatedUser));
         setUser(updatedUser);
-        showSuccess();
+        showMsg(setProfileMsg, 'success', '✅ Profile saved successfully!');
     };
 
     const handleSaveOrganization = () => {
+        if (!basicForm.collegeName.trim()) {
+            showMsg(setOrgMsg, 'error', 'College name is required.');
+            return;
+        }
         localStorage.setItem('sponza_college_profile', JSON.stringify({ basicForm, contactForm, aboutForm }));
-        showSuccess();
+        showMsg(setOrgMsg, 'success', '✅ Organization info saved successfully!');
+    };
+
+    const handleUpdatePassword = () => {
+        const e = {};
+        if (!securityForm.currentPassword) {
+            e.currentPassword = 'Current password is required';
+        } else if (securityForm.currentPassword !== user.password) {
+            e.currentPassword = 'Current password is incorrect';
+        }
+        if (!securityForm.newPassword) {
+            e.newPassword = 'New password is required';
+        } else if (securityForm.newPassword.length < 8) {
+            e.newPassword = 'Minimum 8 characters required';
+        } else if (!/[A-Z]/.test(securityForm.newPassword)) {
+            e.newPassword = 'Must contain at least one uppercase letter';
+        } else if (!/[0-9]/.test(securityForm.newPassword)) {
+            e.newPassword = 'Must contain at least one number';
+        } else if (!/[!@#$%^&*]/.test(securityForm.newPassword)) {
+            e.newPassword = 'Must contain a special character (!@#$%^&*)';
+        }
+        if (!securityForm.confirmPassword) {
+            e.confirmPassword = 'Please confirm your new password';
+        } else if (securityForm.newPassword !== securityForm.confirmPassword) {
+            e.confirmPassword = 'Passwords do not match';
+        }
+        setSecurityErrors(e);
+        if (Object.keys(e).length > 0) return;
+
+        const updatedUser = { ...user, password: securityForm.newPassword };
+        localStorage.setItem('sponza_auth', JSON.stringify(updatedUser));
+        setUser(updatedUser);
+        setSecurityForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+        setSecurityErrors({});
+        showMsg(setSecurityMsg, 'success', '✅ Password updated successfully!');
+    };
+
+    const MsgBanner = ({ msg }) => {
+        if (!msg) return null;
+        return (
+            <div className={`mb-6 px-4 py-3 rounded-lg text-sm font-medium border ${
+                msg.type === 'success'
+                    ? 'bg-green-50 border-green-200 text-green-700'
+                    : 'bg-red-50 border-red-200 text-red-700'
+            }`}>
+                {msg.text}
+            </div>
+        );
     };
 
     const sidebarItems = [
@@ -167,11 +254,7 @@ export default function CollegeSettings() {
                             ══════════════════════════════ */}
                             <TabsContent value="profile">
                                 <Card className="p-6">
-                                    {saveSuccess && (
-                                        <div className="mb-6 px-4 py-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm font-medium">
-                                            ✅ Profile saved successfully! Header avatar updated.
-                                        </div>
-                                    )}
+                                    <MsgBanner msg={profileMsg} />
 
                                     <div className="flex items-center gap-6 mb-8">
                                         <div className="relative">
@@ -257,11 +340,7 @@ export default function CollegeSettings() {
                                 ORGANIZATION TAB
                             ══════════════════════════════ */}
                             <TabsContent value="organization">
-                                {saveSuccess && (
-                                    <div className="mb-4 px-4 py-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm font-medium">
-                                        ✅ Organization info saved successfully!
-                                    </div>
-                                )}
+                                <MsgBanner msg={orgMsg} />
 
                                 {/* Basic Info */}
                                 <Card className="p-6 mb-6">
@@ -494,22 +573,42 @@ export default function CollegeSettings() {
                             <TabsContent value="security">
                                 <Card className="p-6">
                                     <h3 className="text-lg font-semibold text-[#1F2937] mb-6">Change Password</h3>
+                                    <MsgBanner msg={securityMsg} />
                                     <div className="grid gap-6 max-w-md">
                                         <div>
                                             <Label>Current Password</Label>
-                                            <Input type="password" className="mt-1" />
+                                            <Input
+                                                type="password"
+                                                value={securityForm.currentPassword}
+                                                onChange={e => { setSecurityForm(p => ({ ...p, currentPassword: e.target.value })); setSecurityErrors(p => ({ ...p, currentPassword: '' })); }}
+                                                className="mt-1"
+                                            />
+                                            {securityErrors.currentPassword && <p className="text-red-500 text-xs mt-1">{securityErrors.currentPassword}</p>}
                                         </div>
                                         <div>
                                             <Label>New Password</Label>
-                                            <Input type="password" className="mt-1" />
+                                            <Input
+                                                type="password"
+                                                value={securityForm.newPassword}
+                                                onChange={e => { setSecurityForm(p => ({ ...p, newPassword: e.target.value })); setSecurityErrors(p => ({ ...p, newPassword: '' })); }}
+                                                placeholder="Min 8 chars, uppercase, number, special char"
+                                                className="mt-1"
+                                            />
+                                            {securityErrors.newPassword && <p className="text-red-500 text-xs mt-1">{securityErrors.newPassword}</p>}
                                         </div>
                                         <div>
                                             <Label>Confirm New Password</Label>
-                                            <Input type="password" className="mt-1" />
+                                            <Input
+                                                type="password"
+                                                value={securityForm.confirmPassword}
+                                                onChange={e => { setSecurityForm(p => ({ ...p, confirmPassword: e.target.value })); setSecurityErrors(p => ({ ...p, confirmPassword: '' })); }}
+                                                className="mt-1"
+                                            />
+                                            {securityErrors.confirmPassword && <p className="text-red-500 text-xs mt-1">{securityErrors.confirmPassword}</p>}
                                         </div>
                                     </div>
                                     <div className="mt-6 pt-6 border-t flex justify-end">
-                                        <Button className="bg-[#1E3A8A] hover:bg-[#1E3A8A]/90">
+                                        <Button className="bg-[#1E3A8A] hover:bg-[#1E3A8A]/90" onClick={handleUpdatePassword}>
                                             Update Password
                                         </Button>
                                     </div>

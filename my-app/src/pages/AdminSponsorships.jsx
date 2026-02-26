@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-    LayoutDashboard, Users, Calendar, FileText, 
+import {
+    LayoutDashboard, Users, Calendar, FileText,
     BarChart3, Search, Filter, Download, TrendingUp
 } from 'lucide-react';
 import { createPageUrl } from 'C:/Users/USER/sponza/project/my-app/src/utils';
@@ -19,8 +19,7 @@ import {
     TableHeader,
     TableRow,
 } from "C:/Users/USER/sponza/project/my-app/src/components/ui/table";
-import { dummySponsorshipRequests, dummyPaymentRecords } from 'C:/Users/USER/sponza/project/my-app/src/components/data/dummyData';
-
+import { dummySponsorshipRequests, dummyPaymentRecords, dummyEvents } from 'C:/Users/USER/sponza/project/my-app/src/components/data/dummyData';
 export default function AdminSponsorships() {
     const navigate = useNavigate();
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -68,15 +67,15 @@ export default function AdminSponsorships() {
 
     return (
         <div className="min-h-screen bg-[#F8FAFC] flex">
-            <Sidebar 
-                items={sidebarItems} 
-                collapsed={sidebarCollapsed} 
+            <Sidebar
+                items={sidebarItems}
+                collapsed={sidebarCollapsed}
                 setCollapsed={setSidebarCollapsed}
                 userRole="admin"
             />
 
             <div className="flex-1 flex flex-col min-h-screen">
-                <DashboardHeader 
+                <DashboardHeader
                     user={user}
                     onLogout={handleLogout}
                     onMenuClick={() => setSidebarCollapsed(!sidebarCollapsed)}
@@ -131,10 +130,13 @@ export default function AdminSponsorships() {
                             </div>
                             <div className="overflow-x-auto">
                                 <Table>
+
                                     <TableHeader>
                                         <TableRow>
                                             <TableHead>Sponsor</TableHead>
                                             <TableHead>Event</TableHead>
+                                            <TableHead>College</TableHead>
+                                            <TableHead>Location</TableHead>
                                             <TableHead>Package</TableHead>
                                             <TableHead>Amount</TableHead>
                                             <TableHead>Date</TableHead>
@@ -142,39 +144,55 @@ export default function AdminSponsorships() {
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
-                                        {dummySponsorshipRequests.map((request) => (
-                                            <TableRow key={request.id}>
-                                                <TableCell>
-                                                    <div className="flex items-center gap-3">
-                                                        <img 
-                                                            src={request.sponsorLogo}
-                                                            alt={request.sponsor}
-                                                            className="w-10 h-10 rounded-lg object-cover"
-                                                        />
-                                                        <span className="font-medium">{request.sponsor}</span>
-                                                    </div>
-                                                </TableCell>
-                                                <TableCell>{request.eventTitle}</TableCell>
-                                                <TableCell>
-                                                    <Badge variant="outline">{request.package}</Badge>
-                                                </TableCell>
-                                                <TableCell className="font-semibold text-[#22C55E]">
-                                                    ${request.amount.toLocaleString()}
-                                                </TableCell>
-                                                <TableCell>{request.date}</TableCell>
-                                                <TableCell>
-                                                    <Badge className={
-                                                        request.status === 'approved' ? 'bg-green-100 text-green-700' :
-                                                        request.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                                                        'bg-red-100 text-red-700'
-                                                    }>
-                                                        {request.status}
-                                                    </Badge>
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
+                                        {dummySponsorshipRequests.map((request) => {
+                                            // ✅ Find matching event from dummyEvents to get college + location
+                                            const matchedEvent = dummyEvents.find(e => e.id === request.eventId);
+                                            return (
+                                                <TableRow key={request.id}>
+                                                    <TableCell>
+                                                        <div className="flex items-center gap-3">
+                                                            <img
+                                                                src={request.sponsorLogo}
+                                                                alt={request.sponsor}
+                                                                className="w-10 h-10 rounded-lg object-cover"
+                                                            />
+                                                            <span className="font-medium">{request.sponsor}</span>
+                                                        </div>
+                                                    </TableCell>
+                                                    <TableCell>{request.eventTitle}</TableCell>
+                                                    {/* ✅ College name */}
+                                                    <TableCell>
+                                                        <span className="font-medium text-[#1F2937]">
+                                                            {matchedEvent?.college || '—'}
+                                                        </span>
+                                                    </TableCell>
+                                                    {/* ✅ Location */}
+                                                    <TableCell>
+                                                        <span className="text-slate-500 text-sm">
+                                                            {matchedEvent?.location || '—'}
+                                                        </span>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <Badge variant="outline">{request.package}</Badge>
+                                                    </TableCell>
+                                                    <TableCell className="font-semibold text-[#22C55E]">
+                                                        ${request.amount.toLocaleString()}
+                                                    </TableCell>
+                                                    <TableCell>{request.date}</TableCell>
+                                                    <TableCell>
+                                                        <Badge className={
+                                                            request.status === 'approved' ? 'bg-green-100 text-green-700' :
+                                                                request.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+                                                                    'bg-red-100 text-red-700'
+                                                        }>
+                                                            {request.status}
+                                                        </Badge>
+                                                    </TableCell>
+                                                </TableRow>
+                                            );
+                                        })}
+                                    </TableBody> 
+                                    </Table>
                             </div>
                         </Card>
 
@@ -208,7 +226,7 @@ export default function AdminSponsorships() {
                                                 <TableCell>
                                                     <Badge className={
                                                         payment.status === 'paid' ? 'bg-green-100 text-green-700' :
-                                                        'bg-yellow-100 text-yellow-700'
+                                                            'bg-yellow-100 text-yellow-700'
                                                     }>
                                                         {payment.status}
                                                     </Badge>
