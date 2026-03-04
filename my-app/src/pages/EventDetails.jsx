@@ -13,10 +13,25 @@ import Navbar from '../components/shared/Navbar';
 import Footer from '../components/shared/Footer';
 import { dummyEvents } from 'C:/Users/USER/sponza/project/my-app/src/components/data/dummyData';
 
+const EVENTS_KEY = 'sponza_events';
+
+function loadAllEvents() {
+    try {
+        const stored = localStorage.getItem(EVENTS_KEY);
+        const storedEvents = stored ? JSON.parse(stored) : [];
+        const storedIds = new Set(storedEvents.map(e => String(e.id)));
+        return [
+            ...storedEvents,
+            ...dummyEvents.filter(e => !storedIds.has(String(e.id))),
+        ];
+    } catch {}
+    return dummyEvents;
+}
+
 export default function EventDetails() {
     const navigate = useNavigate();
     const urlParams = new URLSearchParams(window.location.search);
-    const eventId = parseInt(urlParams.get('id')) || 1;
+    const eventId = urlParams.get('id');
     
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [userRole, setUserRole] = useState(null);
@@ -37,7 +52,9 @@ export default function EventDetails() {
         setUserRole(null);
     };
 
-    const event = dummyEvents.find(e => e.id === eventId) || dummyEvents[0];
+    // String compare so both number ids (dummy) and string ids (created events) match
+    const allEvents = loadAllEvents();
+    const event = allEvents.find(e => String(e.id) === String(eventId)) || allEvents[0];
 
     const categoryColors = {
         'Tech': 'bg-blue-100 text-blue-700',
@@ -92,7 +109,7 @@ export default function EventDetails() {
                             </div>
                             <div className="flex items-center gap-2">
                                 <Users className="w-5 h-5" />
-                                <span>{event.expectedAttendees.toLocaleString()} Expected Attendees</span>
+                                <span>{event.expectedAttendees?.toLocaleString()} Expected Attendees</span>
                             </div>
                         </div>
                     </div>
@@ -132,7 +149,7 @@ export default function EventDetails() {
                                             >
                                                 <div className="flex justify-between">
                                                     <h3 className="text-xl font-bold">{pkg.name}</h3>
-                                                    <p className="text-2xl font-bold text-green-600">${pkg.price}</p>
+                                                    <p className="text-2xl font-bold text-green-600">₹{pkg.price}</p>
                                                 </div>
                                             </Card>
                                         ))}
@@ -148,8 +165,8 @@ export default function EventDetails() {
                         </div>
 
                         <div className="lg:col-span-1">
-                            <Card className="p-6 sticky top-24">
-                                <Button onClick={handleApply} className="w-full">
+                            <Card className="p-6 sticky top-24 flex flex-col justify-end min-h-[200px]">
+                                <Button onClick={handleApply} className="w-full mt-auto">
                                     Apply for Sponsorship
                                 </Button>
                             </Card>
