@@ -117,7 +117,6 @@ export default function SponsorSettings() {
             companyName:       p.companyName       || '',
             industry:          p.industry          || '',
             companyType:       p.companyType       || '',
-            companySize:       p.companySize       || '',
             yearEstablished:   p.yearEstablished   || '',
             companyWebsite:    p.companyWebsite    || '',
             description:       p.description       || '',
@@ -404,17 +403,6 @@ export default function SponsorSettings() {
                                             </div>
                                         </div>
                                         <div className="grid md:grid-cols-2 gap-6">
-                                            <div>
-                                                <Label>Company Size</Label>
-                                                <Select value={companyForm.companySize} onValueChange={v => setCompanyForm(p => ({ ...p, companySize: v }))}>
-                                                    <SelectTrigger className="mt-1"><SelectValue placeholder="Select size" /></SelectTrigger>
-                                                    <SelectContent>
-                                                        {['1-10', '11-50', '51-200', '201-500', '500+'].map(s => (
-                                                            <SelectItem key={s} value={s}>{s} employees</SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
-                                            </div>
                                             <div>
                                                 <Label>Year Established</Label>
                                                 <Input type="number" value={companyForm.yearEstablished} onChange={e => setCompanyForm(p => ({ ...p, yearEstablished: e.target.value }))} placeholder="e.g., 2010" className="mt-1" min="1900" max={new Date().getFullYear()} />
